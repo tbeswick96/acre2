@@ -9,3 +9,5 @@ Thumbs.db
 *.dll
 *.exe
 *.vscode*
+@acre2/*
+acre2_*.zip
