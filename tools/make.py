@@ -349,7 +349,7 @@ def compile_extensions(extensions_root, force_build):
                 os.mkdir(vcproj32)
             # Build
             os.chdir(vcproj32)
-            subprocess.call(["cmake", "..", "-DUSE_64BIT_BUILD=OFF", "-G", "Visual Studio 14 2015"])
+            subprocess.call(["cmake", "..", "-DUSE_64BIT_BUILD=OFF", "-G", "Visual Studio 15 2017"])
             print()
             extensions32_cmd = joinstr.join(extensions32)
             subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions32_cmd), "/p:Configuration=RelWithDebInfo"])
@@ -364,7 +364,7 @@ def compile_extensions(extensions_root, force_build):
                 os.mkdir(vcproj64)
             # Build
             os.chdir(vcproj64)
-            subprocess.call(["cmake", "..", "-DUSE_64BIT_BUILD=ON", "-G", "Visual Studio 14 2015 Win64"])
+            subprocess.call(["cmake", "..", "-DUSE_64BIT_BUILD=ON", "-G", "Visual Studio 15 2017 Win64"])
             print()
             extensions64_cmd = joinstr.join(extensions64)
             subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions64_cmd), "/p:Configuration=RelWithDebInfo"])
@@ -1670,4 +1670,4 @@ if __name__ == "__main__":
     if ciBuild:
         sys.exit(0)
 
-    input("Press Enter to continue...")
+    #input("Press Enter to continue...")

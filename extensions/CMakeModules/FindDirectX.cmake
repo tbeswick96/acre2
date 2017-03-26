@@ -22,11 +22,7 @@ if(WIN32) # The only platform it makes sense to check for DirectX SDK
     "${DIRECTX_HOME}" "${ENV_DIRECTX_HOME}"
     "${DIRECTX_ROOT}" "${ENV_DIRECTX_ROOT}"
     "${DIRECTX_BASE}" "${ENV_DIRECTX_BASE}"
-    "C:/apps_x86/Microsoft DirectX SDK*"
-    "C:/Program Files (x86)/Microsoft DirectX SDK*"
-    "C:/apps/Microsoft DirectX SDK*"
-    "C:/Program Files/Microsoft DirectX SDK*"
-    "$ENV{ProgramFiles}/Microsoft DirectX SDK*"
+    "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)"
   )
   create_search_paths(DirectX)
   # redo search if prefix path changed
