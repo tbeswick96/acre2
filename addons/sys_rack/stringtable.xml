@@ -103,5 +103,11 @@
         <Key ID="STR_ACRE_sys_rack_dashUpperShort">
             <English>D.Up</English>
         </Key>
+        <Key ID="STR_ACRE_sys_rack_turnOnSpeaker">
+            <English>Turn On Speaker</English>
+        </Key>
+        <Key ID="STR_ACRE_sys_rack_turnOffSpeaker">
+            <English>Turn Off Speaker</English>
+        </Key>
     </Package>
 </Project>
