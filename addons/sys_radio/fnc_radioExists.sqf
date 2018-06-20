@@ -19,7 +19,13 @@
 params ["_class"];
 
 private _ret = false;
-if (HASH_HASKEY(EGVAR(sys_server,objectIdRelationTable), _class)) then {
-    _ret = true;
+if (isServer) then {
+    if (HASH_HASKEY(EGVAR(sys_server,masterIdTable), _class)) then {
+        _ret = true;
+    };
+} else {
+    if (HASH_HASKEY(EGVAR(sys_server,objectIdRelationTable), _class)) then {
+        _ret = true;
+    };
 };
 _ret;
