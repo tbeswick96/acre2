@@ -1,4 +1,5 @@
- /*
+ #include "script_component.hpp"
+/*
  * Author: ACRE2Team
  * Informs, once all checks are passed, that all ACRE2 core components are properly loaded. It is executed
  * as a per frame handler until all core checks are successful.
@@ -14,7 +15,6 @@
  *
  * Public: No
  */
-#include "script_component.hpp"
 
 if (isNull player) exitWith {};
 acre_player = player;

@@ -15,15 +15,13 @@
  */
 #include "script_component.hpp"
 
-private ["_forwardV", "_upV"];
 params ["_obj"];
+private ["_forwardV", "_upV"];
 
 //@TODO: This is a hack fix for vehicles having funky up vectors when people are inside...
 if (vehicle _obj == _obj) then {
-    private _spinePos = _obj modelToWorldVisual (_obj selectionPosition "Spine3");   
-
+    private _spinePos = _obj modelToWorldVisual (_obj selectionPosition "Spine3");
     _upV = _spinePos vectorFromTo (_obj modelToWorldVisual (_obj selectionPosition "Neck"));
-
     private _upP = _upV call cba_fnc_vect2polar;
     
     if (EGVAR(sys_core,automaticAntennaDirection)) then {
