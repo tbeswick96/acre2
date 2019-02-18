@@ -20,7 +20,6 @@ if (!hasInterface) exitWith {
 */
 
 // globals
-//DGVAR(automaticAntennaDirection) = false;
 DGVAR(antennaDirUp) = false;
 DGVAR(lowered) = 0;
 DGVAR(muting) = [];
@@ -69,6 +68,7 @@ GVAR(delayReleasePTT_Handle) = nil;
 
 DVAR(ACRE_ACTIVE_PTTKEY) = -2;
 DVAR(ACRE_BROADCASTING_RADIOID) = "";
+DVAR(ACRE_BROADCASTING_NOTIFICATION_LAYER) = ""; // Name of the notification system layer where the current broadcast is displayed
 
 DVAR(ACRE_CURRENT_LANGUAGE_ID) = 0;
 DVAR(ACRE_SPOKEN_LANGUAGES) = [];
@@ -95,9 +95,13 @@ acre_player = player;
 GVAR(coreCache) = HASH_CREATE;
 
 acre_sys_io_ioEventFnc = {
-    BEGIN_COUNTER(ioEventFunction);
+    #ifdef ENABLE_PERFORMANCE_COUNTERS
+        BEGIN_COUNTER(ioEventFunction);
+    #endif
     _this call EFUNC(sys_rpc,handleData);
-    END_COUNTER(ioEventFunction);
+    #ifdef ENABLE_PERFORMANCE_COUNTERS
+        END_COUNTER(ioEventFunction);
+    #endif
 };
 
 ["unit", {
