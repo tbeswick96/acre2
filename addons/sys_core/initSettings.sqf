@@ -146,6 +146,16 @@
     {[_this] call FUNC(setRevealToAI)}
 ] call CBA_Settings_fnc_init;
 
+// Remember used rack radios
+[
+    QGVAR(rememberUsedRackRadios),
+    "CHECKBOX",
+    localize LSTRING(rememberUsedRackRadios_displayName),
+    "ACRE2",
+    true,
+    true
+] call CBA_Settings_fnc_init;
+
 // Notification Settings
 /*[
     QGVAR(incomingTransmissionNotification),
@@ -155,16 +165,6 @@
     false,
     true,
     {} // @todo remove second parameter in 2.7.0
-] call CBA_Settings_fnc_init;
-
-// Remember used rack radios
-[
-    QGVAR(rememberUsedRackRadios),
-    "CHECKBOX",
-    localize LSTRING(rememberUsedRackRadios_displayName),
-    "ACRE2",
-    true,
-    true
 ] call CBA_Settings_fnc_init;
 
 [
