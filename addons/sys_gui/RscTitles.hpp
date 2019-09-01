@@ -3,7 +3,7 @@ class RscTitles {
         x = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,GVAR(volumeControl),X)',VOLUME_CONTROL_DEFAULT_X)]); \
         y = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,GVAR(volumeControl),Y)',VOLUME_CONTROL_DEFAULT_Y)]); \
         w = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,GVAR(volumeControl),W)',VOLUME_CONTROL_DEFAULT_W)]); \
-        h = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,GVAR(volumeControl),H)',VOLUME_CONTROL_DEFAULT_H)]); \
+        h = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,GVAR(volumeControl),H)',VOLUME_CONTROL_DEFAULT_H)]);
 
     class GVAR(VolumeControl) {
         idd = -1;
@@ -31,7 +31,7 @@ class RscTitles {
         x = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,grid_ACRE_vehicleInfo,X)',VEHICLE_INFO_DEFAULT_X)]); \
         y = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,grid_ACRE_vehicleInfo,Y)',VEHICLE_INFO_DEFAULT_Y)]); \
         w = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,grid_ACRE_vehicleInfo,W)',VEHICLE_INFO_DEFAULT_W)]); \
-        h = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,grid_ACRE_vehicleInfo,H)',VEHICLE_INFO_DEFAULT_H)]); \
+        h = QUOTE(profileNamespace getVariable [ARR_2('TRIPLES(IGUI,grid_ACRE_vehicleInfo,H)',VEHICLE_INFO_DEFAULT_H)]);
 
     class GVAR(vehicleInfo) {
         idd = -1;

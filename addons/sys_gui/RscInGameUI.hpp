@@ -46,7 +46,7 @@ class RscInGameUI {
                     x = 0;
                     y = 0;
                     w = "3.7 * (((safezoneW / safezoneH) min 1.2) / 40)";
-                    text= QPATHTOF(data\ui\stand_straight.paa);
+                    text = QPATHTOF(data\ui\stand_straight.paa);
                     colorBackground[] = {
                         "profileNamespace getVariable ['IGUI_BCG_RGB_R', 0]",
                         "profileNamespace getVariable ['IGUI_BCG_RGB_G', 1]",
