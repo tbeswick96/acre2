@@ -145,6 +145,16 @@
     {[_this] call FUNC(setRevealToAI)}
 ] call CBA_fnc_addSetting;
 
+// Remember used rack radios
+[
+    QGVAR(rememberUsedRackRadios),
+    "CHECKBOX",
+    localize LSTRING(rememberUsedRackRadios_displayName),
+    "ACRE2",
+    true,
+    true
+] call CBA_Settings_fnc_init;
+
 // Notification Settings - not yet implemented
 /*[
     QGVAR(incomingTransmissionNotification),
