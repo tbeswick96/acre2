@@ -189,5 +189,11 @@
             <French>Arrêter de tout utiliser</French>
             <German>Nicht mehr alle verwenden</German>
         </Key>
+        <Key ID="STR_ACRE_sys_rack_useAllRacks">
+            <English>Use All</English>
+        </Key>
+        <Key ID="STR_ACRE_sys_rack_stopUsingAllRacks">
+            <English>Stop Using All</English>
+        </Key>
     </Package>
 </Project>
