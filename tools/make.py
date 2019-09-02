@@ -260,7 +260,7 @@ def find_depbo_tools():
             print_error("Could not find {}".format(tool))
             failed = True
         else:
-            #Strip any quotations from the path due to a MikeRo tool bug which leaves a trailing space in some of its registry paths.
+            #Strip any quotations from the path due to a Mikero tool bug which leaves a trailing space in some of its registry paths.
             requiredToolPaths[tool] = path.strip('"')
             print_green("Found {}.".format(tool))
         finally:
