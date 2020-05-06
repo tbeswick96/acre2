@@ -522,9 +522,15 @@ def cleanup_optionals(mod):
                 dst_sig_path = os.path.join(release_dir, project, "optionals",folder,"addons", sigFile_name)
 
                 if (os.path.isfile(src_file_path)):
+                    if (os.path.isfile(dst_file_path)):
+                        # print("Cleanuping up old file {}".format(dst_file_path))
+                        os.remove(dst_file_path)
                     #print("Preserving {}".format(file_name))
                     os.renames(src_file_path,dst_file_path)
                 if (os.path.isfile(src_sig_path)):
+                    if (os.path.isfile(dst_sig_path)):
+                        # print("Cleanuping up old file {}".format(dst_sig_path))
+                        os.remove(dst_sig_path)
                     #print("Preserving {}".format(sigFile_name))
                     os.renames(src_sig_path,dst_sig_path)
             except FileExistsError:
@@ -932,7 +938,6 @@ make.py [help] [test] [force] [key <name>] [target <name>] [release <version>]
 test -- Copy result to Arma 3.
 release <version> -- Make archive with <version>.
 force -- Ignore cache and build all.
-checkexternal -- Check External Files
 target <name> -- Use rules in make.cfg under heading [<name>] rather than
    default [Make]
 key <name> -- Use key in working directory with <name> to sign. If it does not
@@ -990,12 +995,6 @@ See the make.cfg file for additional build options.
         quiet = True
         argv.remove("quiet")
 
-    if "checkexternal" in argv:
-        argv.remove("checkexternal")
-        check_external = True
-    else:
-        check_external = False
-
     if "version" in argv:
         argv.remove("version")
         version_update = True
@@ -1025,8 +1024,6 @@ See the make.cfg file for additional build options.
     if "ci" in argv:
         argv.remove("ci")
         ciBuild = True
-
-    print_yellow("\nCheck external references is set to {}".format(str(check_external)))
 
     # Get the directory the make script is in.
     make_root = os.path.dirname(os.path.realpath(__file__))
@@ -1086,7 +1083,7 @@ See the make.cfg file for additional build options.
         # Project module Root
         module_root_parent = os.path.abspath(os.path.join(os.path.join(work_drive, prefix), os.pardir))
         module_root = cfg.get(make_target, "module_root", fallback=os.path.join(make_root_parent, "addons"))
-        # optionals_root = os.path.join(module_root_parent, "optionals")
+        optionals_root = os.path.join(module_root_parent, "optionals")
         extensions_root = os.path.join(module_root_parent, "extensions")
 
         if (os.path.isdir(module_root)):
@@ -1100,10 +1097,10 @@ See the make.cfg file for additional build options.
         key_name = versionStamp = get_private_keyname(commit_id)
         print_green ("module_root: {}".format(module_root))
 
-        # if (os.path.isdir(optionals_root)):
-        #     print_green ("optionals_root: {}".format(optionals_root))
-        # else:
-        #     print("optionals_root does not exist: {}".format(optionals_root))
+        if (os.path.isdir(optionals_root)):
+            print_green ("optionals_root: {}".format(optionals_root))
+        else:
+            print("optionals_root does not exist: {}".format(optionals_root))
 
         print_green ("release_dir: {}".format(release_dir))
 
@@ -1401,13 +1398,10 @@ See the make.cfg file for additional build options.
 
                     if os.path.isfile(nobinFilePath):
                         print_green("$NOBIN$ Found. Proceeding with non-binarizing!")
-                        cmd = [makepboTool, "-P","-A","-G","-N","-X=*.backup", os.path.join(work_drive, prefix, module),os.path.join(module_root, release_dir, project,"addons")]
+                        cmd = [makepboTool, "-P","-A","-X=*.backup", os.path.join(work_drive, prefix, module),os.path.join(module_root, release_dir, project,"addons")]
 
                     else:
-                        if check_external:
-                            cmd = [pboproject, "-P", os.path.join(work_drive, prefix, module), "+Engine=Arma3", "-S","+Noisy", "+G", "+Clean", "+Mod="+os.path.join(module_root, release_dir, project), "-Key"]
-                        else:
-                            cmd = [pboproject, "-P", os.path.join(work_drive, prefix, module), "+Engine=Arma3", "-S","+Noisy", "-G", "+Clean", "+Mod="+os.path.join(module_root, release_dir, project), "-Key"]
+                        cmd = [pboproject, "-P", os.path.join(work_drive, prefix, module), "+Engine=Arma3", "-S", "+Noisy", "+Clean", "+Mod="+os.path.join(module_root, release_dir, project), "-Key"]
 
                     color("grey")
                     if quiet:
