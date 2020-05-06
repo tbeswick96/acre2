@@ -22,7 +22,7 @@ private _actions = [];
 private _accessibleRacks = [_target, acre_player] call FUNC(getAccessibleVehicleRacks);
 private _hearableRacks = [_target, acre_player] call FUNC(getHearableVehicleRacks);
 private _racks = _accessibleRacks + (_hearableRacks - (_accessibleRacks arrayIntersect _hearableRacks));
-private _radios = (_racks apply {[_x] call FUNC(getMountedRadio)}) select {_x != "" && {[_x, acre_player] call FUNC(isRadioAccessible)}};
+private _radios = (_racks apply {[_x] call FUNC(getMountedRadio)}) select {_x != ""};
 private _usableRadios = _radios select {!([_x, acre_player] call FUNC(isRadioHearable))};
 private _usableInaccessibleRadios = _usableRadios select {!(_x in ACRE_ACCESSIBLE_RACK_RADIOS)};
 private _usableAccessibleRadios = _usableRadios select {_x in ACRE_ACCESSIBLE_RACK_RADIOS};
@@ -80,5 +80,6 @@ if !(_usableAccessibleRadios isEqualTo []) then {
         _usableAccessibleRadios
     ] call ace_interact_menu_fnc_createAction;
     _actions pushBack [_action, [], _target];
+};
 
 _actions
