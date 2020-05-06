@@ -19,7 +19,7 @@ private _zeusCategory = format ["ACRE2 %1", localize "str_a3_cfghints_curator_cu
     "CHECKBOX",
     LLSTRING(ZeusCommunicateViaCamera_DisplayName),
     _zeusCategory,
-    true
+    false
 ] call CBA_fnc_addSetting;
 
 // Ability to join the spectator chat
