@@ -24,6 +24,9 @@ check = [
 releasebuild = [
     "@zip acre2_v{{version}}"
 ]
+prebuild = [
+    "!extension"
+]
 
 [header_exts]
 version = "{{git \"id 8\"}}"
@@ -46,6 +49,21 @@ steps_windows = [
     "powershell -Command '#define ACRE_VERSION_MINOR {{semver.minor}}' >> extensions/src/ACRE2Shared/version.h",
     "powershell -Command '#define ACRE_VERSION_SUBMINOR {{semver.patch}}' >> extensions/src/ACRE2Shared/version.h",
     "powershell -Command '#define ACRE_VERSION_BUILD {{semver.build}}' >> extensions/src/ACRE2Shared/version.h"
+]
+only_release = true
+show_output = true
+
+[scripts.extension]
+steps_linux = [
+    "echo can't make linux yet"
+]
+steps_windows = [
+    "echo make windows x86",
+    "cd .\\extensions\\vcproj\\ && cmake .. -A Win32",
+    "cd .\\extensions\\vcproj\\ && msbuild ACRE.sln /m /t:ACRE2Arma\\acre;ACRE2Arma\\arma2ts;ACRE2\\ACRE2Steam;ACRE2\\ACRE2TS;Extras\\Wav2B64 /p:Configuration=RelWithDebInfo",
+    "echo make windows x64",
+    "cd .\\extensions\\vcproj64\\ && cmake .. -A x64",
+    "cd .\\extensions\\vcproj64\\ && msbuild ACRE.sln /m /t:ACRE2Arma\\acre;ACRE2Arma\\arma2ts;ACRE2\\ACRE2Steam;ACRE2\\ACRE2TS /p:Configuration=RelWithDebInfo"
 ]
 only_release = true
 show_output = true
