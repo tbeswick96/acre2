@@ -80,6 +80,8 @@ extensions32 = ["ACRE2Arma\\acre", "ACRE2Arma\\arma2ts", "ACRE2\\ACRE2Steam", "A
 extensions64 = ["ACRE2Arma\\acre", "ACRE2Arma\\arma2ts", "ACRE2\\ACRE2Steam", "ACRE2\\ACRE2TS"]
 # be_cred_file expected to be in folder defined by enviorment variable CBA_PUBLISH_CREDENTIALS_PATH
 be_cred_filename = "acre_battleye_creds.json"
+printedErrors = 0
+redirectColours = False
 
 
 ciBuild = False # Used for CI builds
@@ -297,28 +299,60 @@ def color(color):
         elif color == "reset":
             sys.stdout.write('\033[0m')
 
+def print_as_json(message, colour):
+    print('JSON:{{"message": "{}", "colour": "{}"}}'.format(message.replace('\n', '\\n'), colour))
+
+
 def print_error(msg):
-    color("red")
-    print("ERROR: {}".format(msg))
-    color("reset")
+    global redirectColours
+    if (redirectColours):
+        print_as_json("ERROR: {}".format(msg), "#f14c4c")
+    else:
+        color("red")
+        print("ERROR: {}".format(msg))
+        color("reset")
     global printedErrors
     printedErrors += 1
 
+
 def print_green(msg):
-    color("green")
-    print(msg)
-    color("reset")
+    global redirectColours
+    if (redirectColours):
+        print_as_json(msg, "#20d18b")
+    else:
+        color("green")
+        print(msg)
+        color("reset")
+
 
 def print_blue(msg):
-    color("blue")
-    print(msg)
-    color("reset")
+    global redirectColours
+    if (redirectColours):
+        print_as_json(msg, "#165ead")
+    else:
+        color("blue")
+        print(msg)
+        color("reset")
+
 
 def print_yellow(msg):
-    color("yellow")
-    print(msg)
-    color("reset")
+    global redirectColours
+    if (redirectColours):
+        print_as_json(msg, "#f5f543")
+    else:
+        color("yellow")
+        print(msg)
+        color("reset")
 
+
+def execute(cmd):
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+    for stdout_line in iter(popen.stdout.readline, ""):
+        yield stdout_line
+    popen.stdout.close()
+    return_code = popen.wait()
+    if return_code:
+        raise subprocess.CalledProcessError(return_code, cmd)
 
 def compile_extensions(extensions_root, force_build):
     originalDir = os.getcwd()
@@ -342,10 +376,14 @@ def compile_extensions(extensions_root, force_build):
                 os.mkdir(vcproj32)
             # Build
             os.chdir(vcproj32)
-            subprocess.call(["cmake", "..", "-A", "Win32"])
+            # subprocess.call(["cmake", "..", "-A", "Win32"])
+            for path in execute(["cmake", "..", "-A", "Win32"]):
+                print(path, end="")
             print()
             extensions32_cmd = ";".join([ext + ":rebuild" if force_build else ext for ext in extensions32])
-            subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions32_cmd), "/p:Configuration=RelWithDebInfo"])
+            # subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions32_cmd), "/p:Configuration=RelWithDebInfo"])
+            for path in execute(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions32_cmd), "/p:Configuration=RelWithDebInfo"]):
+                print(path, end="")
         else:
             print("No 32-bit extensions found.")
 
@@ -357,10 +395,14 @@ def compile_extensions(extensions_root, force_build):
                 os.mkdir(vcproj64)
             # Build
             os.chdir(vcproj64)
-            subprocess.call(["cmake", "..", "-A", "x64"])
+            # subprocess.call(["cmake", "..", "-A", "x64"])
+            for path in execute(["cmake", "..", "-A", "x64"]):
+                print(path, end="")
             print()
             extensions64_cmd = ";".join([ext + ":rebuild" if force_build else ext for ext in extensions64])
-            subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions64_cmd), "/p:Configuration=RelWithDebInfo"])
+            # subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions64_cmd), "/p:Configuration=RelWithDebInfo"])
+            for path in execute(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions64_cmd), "/p:Configuration=RelWithDebInfo"]):
+                print(path, end="")
         else:
             print("No 64-bit extensions found.")
     except:
@@ -884,6 +926,13 @@ def version_stamp_pboprefix(module,commitID):
 
 
 def main(argv):
+    global redirectColours
+    if "redirect" in argv:
+        argv.remove("redirect")
+        redirectColours = True
+    else:
+        redirectColours = False
+
     """Build an Arma addon suite in a directory from rules in a make.cfg file."""
     print_blue("\nmake.py for Arma, modified for Advanced Combat Radio Environment v{}".format(__version__))
 
