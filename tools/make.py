@@ -379,11 +379,13 @@ def compile_extensions(extensions_root, force_build):
             # subprocess.call(["cmake", "..", "-A", "Win32"])
             for path in execute(["cmake", "..", "-A", "Win32"]):
                 print(path, end="")
+            
             print()
             extensions32_cmd = ";".join([ext + ":rebuild" if force_build else ext for ext in extensions32])
             # subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions32_cmd), "/p:Configuration=RelWithDebInfo"])
             for path in execute(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions32_cmd), "/p:Configuration=RelWithDebInfo"]):
                 print(path, end="")
+            
         else:
             print("No 32-bit extensions found.")
 
@@ -398,11 +400,13 @@ def compile_extensions(extensions_root, force_build):
             # subprocess.call(["cmake", "..", "-A", "x64"])
             for path in execute(["cmake", "..", "-A", "x64"]):
                 print(path, end="")
+            
             print()
             extensions64_cmd = ";".join([ext + ":rebuild" if force_build else ext for ext in extensions64])
             # subprocess.call(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions64_cmd), "/p:Configuration=RelWithDebInfo"])
             for path in execute(["msbuild", "ACRE.sln", "/m", "/t:{}".format(extensions64_cmd), "/p:Configuration=RelWithDebInfo"]):
                 print(path, end="")
+            
         else:
             print("No 64-bit extensions found.")
     except:
