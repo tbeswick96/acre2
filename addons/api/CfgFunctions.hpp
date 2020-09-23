@@ -6,6 +6,7 @@ class CfgFunctions {
             PATHTO_FNC(setupMission);
 
             PATHTO_FNC(addDisplayPassthroughKeys);
+            PATHTO_FNC(addNotificationDisplay);
 
             PATHTO_FNC(getMultiPushToTalkAssignment);
             PATHTO_FNC(setMultiPushToTalkAssignment);
@@ -118,7 +119,9 @@ class CfgFunctions {
         class GodMode {
             PATHTO_FNC(godModeConfigureAccess);
             PATHTO_FNC(godModeModifyGroup);
+            PATHTO_FNC(godModeNameGroup);
             PATHTO_FNC(godModeSendText);
+            PATHTO_FNC(godModeGetGroupTargets);
         };
     };
 

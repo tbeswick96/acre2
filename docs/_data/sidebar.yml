@@ -3,7 +3,7 @@
 entries:
 - title: sidebar
   product: ACRE2
-  version: v2.7.4
+  version: v2.8.0
   folders:
 
   - title:
@@ -187,6 +187,10 @@ entries:
 
     - title: Spectator Displays
       url: /wiki/frameworks/spectator-displays
+      output: web, pdf
+
+    - title: God Mode
+      url: /wiki/frameworks/god-mode
       output: web, pdf
 
   - title: Development
