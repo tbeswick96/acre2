@@ -1,4 +1,3 @@
-# HEMTT: https://github.com/synixebrett/HEMTT/commit/a837c9561a871507063208648d8f5304e42e03d1
 name = "ACRE2"
 prefix = "acre"
 author = "ACRE2 Team"
@@ -19,13 +18,11 @@ key_name = "{{prefix}}_{{version}}"
 authority = "{{prefix}}_{{version}}-{{git \"id 8\"}}"
 
 check = [
-    "!version_set"
+    "!version_set",
+    "!binarizer_link"
 ]
 releasebuild = [
     "@zip acre2_v{{version}}"
-]
-prebuild = [
-    "!extension"
 ]
 
 [header_exts]
@@ -53,17 +50,18 @@ steps_windows = [
 only_release = true
 show_output = true
 
-[scripts.extension]
-steps_linux = [
-    "echo can't make linux yet"
-]
+# Binarizer file search compatibility
+[scripts.binarizer_link]
 steps_windows = [
-    "echo make windows x86",
-    "cd .\\extensions\\vcproj\\ && cmake .. -A Win32",
-    "cd .\\extensions\\vcproj\\ && msbuild ACRE.sln /m /t:ACRE2Arma\\acre;ACRE2Arma\\arma2ts;ACRE2\\ACRE2Steam;ACRE2\\ACRE2TS;Extras\\Wav2B64 /p:Configuration=RelWithDebInfo",
-    "echo make windows x64",
-    "cd .\\extensions\\vcproj64\\ && cmake .. -A x64",
-    "cd .\\extensions\\vcproj64\\ && msbuild ACRE.sln /m /t:ACRE2Arma\\acre;ACRE2Arma\\arma2ts;ACRE2\\ACRE2Steam;ACRE2\\ACRE2TS /p:Configuration=RelWithDebInfo"
+    "if not exist idi\\acre mkdir idi\\acre",
+    "if not exist idi\\acre\\addons mklink /j idi\\acre\\addons addons",
+    "if not exist a3 mklink /j a3 include\\a3"
 ]
-only_release = true
+steps_linux = [
+    # Preparation for Windows Binarizer (run once on Linux for network share compatibility)
+    "mkdir -p idi/acre",
+    "[ -d idi/acre/addons ] || ln -sr addons idi/acre/",
+    "mkdir -p a3",
+    "[ -d a3 ] || ln -sr include/a3 a3/"
+]
 show_output = true
