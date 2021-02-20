@@ -2,8 +2,8 @@
 if (is3DEN || {!hasInterface || {!(GVAR(gesturesEnabled))}}) exitWith {};
 if (!isClass (configFile >> "CfgPatches" >> "ace_common")) exitWith {}; // No ACE exit
 
-GVAR(vestRadioArr) = call compile (GVAR(vestRadios));
-GVAR(headsetRadioArr) = call compile (GVAR(headsetRadios));
+GVAR(vestRadioArr) = parseSimpleArray (GVAR(vestRadios));
+GVAR(headsetRadioArr) = parseSimpleArray (GVAR(headsetRadios));
 
 if (GVAR(stopADS)) then {
     GVAR(disallowedViews) = ["GROUP"];
@@ -24,7 +24,7 @@ if (GVAR(stopADS)) then {
     private _hasHeadgear = headgear _unit != "";
     if (!_hasVest && !_hasHeadgear) exitWith {};
 
-    private _baseRadio = _radio call acre_api_fnc_getBaseRadio;
+    private _baseRadio = _radio call EFUNC(api,getBaseRadio);
     private _isVestRadio = _baseRadio in GVAR(vestRadioArr);
     private _isHeadsetRadio = _baseRadio in GVAR(headsetRadioArr);
 
@@ -68,3 +68,8 @@ acre_player addEventHandler ["WeaponDeployed", {
         _unit call FUNC(stopGesture);
     };
 }];
+
+["unit", {
+    params ["", "_oldUnit"];
+    _oldUnit call FUNC(stopGesture);
+}, true] call CBA_fnc_addPlayerEventHandler;
