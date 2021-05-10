@@ -8,25 +8,13 @@
             <English>Enable</English>
         </Key>
         <Key ID="STR_ACRE_sys_gestures_enabled_description">
-            <English>Animate players using radios</English>
-        </Key>
-        <Key ID="STR_ACRE_sys_gestures_headsetRadios">
-            <English>Headset Radios</English>
-        </Key>
-        <Key ID="STR_ACRE_sys_gestures_headsetRadios_description">
-            <English>Radios which will play the headset animation.</English>
-        </Key>
-        <Key ID="STR_ACRE_sys_gestures_vestRadios">
-            <English>Vest Radios</English>
-        </Key>
-        <Key ID="STR_ACRE_sys_gestures_vestRadios_description">
-            <English>Radios that will play the vest animation.</English>
+            <English>Animate players using radios.</English>
         </Key>
         <Key ID="STR_ACRE_sys_gestures_stopADS">
             <English>Prevent Aim Down Sights</English>
         </Key>
         <Key ID="STR_ACRE_sys_gestures_stopADS_description">
-            <English>Keying your radio will prevent aiming down sights.</English>
+            <English>Keying radios will prevent aiming down sights.</English>
         </Key>
     </Package>
 </Project>

@@ -23,7 +23,7 @@ private _defaultCompartment = "";
 
 if (_vehicle != _unit) then {
     private _defaultCompartment = "Compartment1";
-    private _cfg = configFile >> "CfgVehicles" >> typeOf _vehicle;
+    private _cfg = configOf _vehicle;
     private _assignedRole = assignedVehicleRole _unit;
     private _roleType = _assignedRole select 0;
     if (_roleType == "Driver") then {
@@ -45,7 +45,7 @@ if (_vehicle != _unit) then {
         } else {
             if (_roleType == "Cargo") then {
                 private _cargoCompartments = getArray (_cfg >> "cargoCompartments");
-                if !(_cargoCompartments isEqualTo []) then {
+                if (_cargoCompartments isNotEqualTo []) then {
                     private _index = _vehicle getCargoIndex _unit;
                     if (_index > -1) then {
                         private _cargoCompartmentsMaxCount = (count _cargoCompartments) - 1;

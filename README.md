@@ -4,7 +4,7 @@
 
 <p align="center">
     <a href="https://github.com/IDI-Systems/acre2/releases/latest">
-        <img src="https://img.shields.io/badge/Version-2.8.0-blue.svg?style=flat-square" alt="ACRE2 Version">
+        <img src="https://img.shields.io/badge/Version-2.9.0-blue.svg?style=flat-square" alt="ACRE2 Version">
     </a>
     <a href="https://github.com/IDI-Systems/acre2/issues">
         <img src="https://img.shields.io/github/issues-raw/IDI-Systems/acre2.svg?style=flat-square&label=Issues" alt="ACRE2 Issues">
@@ -59,5 +59,5 @@ The project is entirely **open-source** and all contributions are welcome. Core 
 ### Guides
 
 If you installed ACRE2 but have trouble understanding how it all works, or where to start, read this first:
-- [Installation Instructions](http://acre2.idi-systems.com/wiki/user/installation)
-- [Documentation Home](http://acre2.idi-systems.com)
+- [Installation Instructions](https://acre2.idi-systems.com/wiki/user/installation)
+- [Documentation Home](https://acre2.idi-systems.com)

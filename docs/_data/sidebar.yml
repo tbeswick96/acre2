@@ -3,7 +3,7 @@
 entries:
 - title: sidebar
   product: ACRE2
-  version: v2.8.0
+  version: v2.9.0
   folders:
 
   - title:
@@ -31,6 +31,10 @@ entries:
 
     - title: News
       url: /news/latest
+      output: web
+
+    - title: Team
+      url: /team
       output: web
 
   - title: User Guides
@@ -79,6 +83,10 @@ entries:
 
     - title: TeamSpeak Channel Switching
       url: /wiki/user/ts-channel-switching
+      output: web, pdf
+
+    - title: Gestures
+      url: /wiki/user/gestures
       output: web, pdf
 
     - title: God Mode
