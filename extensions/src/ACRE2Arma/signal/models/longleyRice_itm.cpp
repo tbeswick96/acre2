@@ -40,6 +40,7 @@
 
 #define _USE_MATH_DEFINES
 
+#include "shared.hpp"
 #include <math.h>
 #include <complex>
 #include <cassert>
@@ -1382,7 +1383,13 @@ namespace acre {
                             ++k;
                         }
 
-                        s[j + 2] = pfl[k + 2] + (pfl[k + 2] - pfl[k + 1]) * xa;
+                        // This line crashes sometimes (3 separate mdmp all point to this line)
+                        try {
+                            s[j + 2] = pfl[k + 2] + (pfl[k + 2] - pfl[k + 1]) * xa;
+                        } catch (std::exception& e) {
+                            LOG(ERROR) << "Caught error in itm signal calc: " << e.what();
+                            s[j + 2] = 0;
+                        }
                         xa = xa + xb;
                     }
 
