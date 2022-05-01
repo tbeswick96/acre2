@@ -54,21 +54,21 @@
 #define ST_VCENTER        0x0c
 
 #define ST_TYPE           0xF0
-#define ST_SINGLE         0
-#define ST_MULTI          16
-#define ST_TITLE_BAR      32
-#define ST_PICTURE        48
-#define ST_FRAME          64
-#define ST_BACKGROUND     80
-#define ST_GROUP_BOX      96
-#define ST_GROUP_BOX2     112
-#define ST_HUD_BACKGROUND 128
-#define ST_TILE_PICTURE   144
-#define ST_WITH_RECT      160
-#define ST_LINE           176
+// #define ST_SINGLE         0
+// #define ST_MULTI          16
+// #define ST_TITLE_BAR      32
+// #define ST_PICTURE        48
+// #define ST_FRAME          64
+// #define ST_BACKGROUND     80
+// #define ST_GROUP_BOX      96
+// #define ST_GROUP_BOX2     112
+// #define ST_HUD_BACKGROUND 128
+// #define ST_TILE_PICTURE   144
+// #define ST_WITH_RECT      160
+// #define ST_LINE           176
 
-#define FontM    "RobotoCondensed"
+// #define FontM    "RobotoCondensed"
 
-#define ST_SHADOW         0x100
-#define ST_NO_RECT        0x200
-#define ST_KEEP_ASPECT_RATIO  0x800
+// #define ST_SHADOW         0x100
+// #define ST_NO_RECT        0x200
+// #define ST_KEEP_ASPECT_RATIO  0x800
