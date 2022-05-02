@@ -20,7 +20,12 @@
 
 params ["_f", "_mW", "_receiverClass", "_transmitterClass"];
 
-private _count = (missionNamespace getVariable [_transmitterClass + "_running_count", 0]) max 0;
+private _transmitterMap = GVAR(transmitterMap) getOrDefault [_transmitterClass, createHashMap, true];
+private _receiverMap = _transmitterMap getOrDefault [_receiverClass, [0, -992, "", 0], true];
+_receiverMap params ["_bestPower", "_bestSignal", "_bestAntenna", "_runningCount"];
+
+// private _count = (missionNamespace getVariable [_transmitterClass + "_running_count", 0]) max 0;
+private _count = _runningCount max 0;
 if (_count == 0) then {
     private _rxAntennas = [_receiverClass] call EFUNC(sys_components,findAntenna);
     private _txAntennas = [_transmitterClass] call EFUNC(sys_components,findAntenna);
@@ -63,15 +68,19 @@ if (_count == 0) then {
             ] call EFUNC(sys_core,callExt);
         } forEach _rxAntennas;
     } forEach _txAntennas;
-    missionNamespace setVariable [_transmitterClass + "_running_count", _count];
+
+    // missionNamespace setVariable [_transmitterClass + "_running_count", _count];
+    _receiverMap set [3, _count];
 };
-private _maxSignal = missionNamespace getVariable [_transmitterClass + "_best_signal", -992];
-private _Px = missionNamespace getVariable [_transmitterClass + "_best_px", 0];
+
+_receiverMap params ["_bestPower", "_bestSignal"];
+// private _maxSignal = missionNamespace getVariable [_transmitterClass + "_best_signal", -992];
+// private _Px = missionNamespace getVariable [_transmitterClass + "_best_px", 0];
 
 if (ACRE_SIGNAL_DEBUGGING > 0) then {
     private _signalTrace = missionNamespace getVariable [_transmitterClass + "_signal_trace", []];
-    _signalTrace pushBack _maxSignal;
+    _signalTrace pushBack _bestSignal;
     missionNamespace setVariable [_transmitterClass + "_signal_trace", _signalTrace];
 };
 
-[_Px, _maxSignal]
+[_bestPower, _bestSignal]

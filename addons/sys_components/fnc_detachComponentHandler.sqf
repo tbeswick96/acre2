@@ -19,13 +19,14 @@
  * Public: No
  */
 
-params ["_radioID", "", "_data", "_radioData", ""];
-TRACE_3("detachComponentHandler",_radioID,_data,_radioData);
+params ["_radioId", "", "_data", "_radioData", ""];
+TRACE_3("detachComponentHandler",_radioId,_data,_radioData);
 
 // clear out their signal caches from sys_signal call backs.
-missionNamespace setVariable [_radioId + "_best_signal", -992];
-missionNamespace setVariable [_radioId + "_best_px", 0];
-missionNamespace setVariable [_radioId + "_best_ant", ""];
+// missionNamespace setVariable [_radioId + "_best_signal", -992];
+// missionNamespace setVariable [_radioId + "_best_px", 0];
+// missionNamespace setVariable [_radioId + "_best_ant", ""];
+GVAR(transmitterMap) set [_radioId, createHashMap];
 
 private _childConnector = _data select 0; // this is the connector on this event's device
 

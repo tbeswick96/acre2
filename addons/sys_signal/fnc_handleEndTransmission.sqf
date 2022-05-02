@@ -20,8 +20,10 @@
 params ["", "", "_data"];
 _data params ["_transmitterClass"];
 
-missionNamespace setVariable [_transmitterClass + "_running_count", 0];
-missionNamespace setVariable [_transmitterClass + "_best_signal", -992];
-missionNamespace setVariable [_transmitterClass + "_best_ant", ""];
+GVAR(transmitterMap) set [_transmitterClass, createHashMap];
+
+// missionNamespace setVariable [_transmitterClass + "_running_count", 0];
+// missionNamespace setVariable [_transmitterClass + "_best_signal", -992];
+// missionNamespace setVariable [_transmitterClass + "_best_ant", ""];
 
 nil

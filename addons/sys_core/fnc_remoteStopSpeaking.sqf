@@ -48,9 +48,10 @@ _speakingId = parseNumber _speakingId;
                 if (_unit in GVAR(keyedMicRadios)) then {
                     GVAR(speaking_cache_valid) = false;
                     // clear out their signal caches from sys_signal call backs.
-                    missionNamespace setVariable [_radioId + "_best_signal", -992];
-                    missionNamespace setVariable [_radioId + "_best_px", 0];
-                    missionNamespace setVariable [_radioId + "_best_ant", ""];
+                    GVAR(transmitterMap) set [_radioId, createHashMap];
+                    // missionNamespace setVariable [_radioId + "_best_signal", -992];
+                    // missionNamespace setVariable [_radioId + "_best_px", 0];
+                    // missionNamespace setVariable [_radioId + "_best_ant", ""];
 
                     if (_unit != acre_player && {ACRE_SIGNAL_DEBUGGING > 0}) then {
                         private _signalTrace = missionNamespace getVariable [_radioId + "_signal_trace", []];

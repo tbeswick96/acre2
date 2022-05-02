@@ -10,6 +10,8 @@ if (hasInterface) then {
     DGVAR(showSignalHint) = false;
     DGVAR(terrainScaling) = 1;
     DGVAR(omnidirectionalRadios) = 0;
+
+    DGVAR(transmitterMap) = createHashMap;
 };
 
 // CBA Settings
