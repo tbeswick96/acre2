@@ -18,20 +18,20 @@
 #include "\idi\acre\addons\main\script_dialog_defines.hpp"
 #include "script_dialog_defines.hpp"
 
-#undef ST_TITLE_BAR
-#undef ST_TILE_PICTURE
-#undef ST_FRAME
+//#undef ST_TITLE_BAR
+//#undef ST_TILE_PICTURE
+//#undef ST_FRAME
 #undef ST_DOWN
-#undef ST_BACKGROUND
+//#undef ST_BACKGROUND
 #undef CT_XKEYDESC
 #undef CT_OBJECT
 #undef CT_STRUCTURED_TEXT
 #undef CT_TOOLBOX
-#undef ST_MULTI
-#undef ST_PICTURE
+//#undef ST_MULTI
+//#undef ST_PICTURE
 #undef CT_HTML
-#undef ST_GROUP_BOX
-#undef ST_NO_RECT
+//#undef ST_GROUP_BOX
+//#undef ST_NO_RECT
 #undef ST_HPOS
 #undef CT_MAP_MAIN
 #undef CT_SLIDER
@@ -46,13 +46,13 @@
 #undef CT_MAP
 #undef CT_XSLIDER
 #undef ST_VCENTER
-#undef ST_SHADOW
-#undef ST_WITH_RECT
+//#undef ST_SHADOW
+//#undef ST_WITH_RECT
 #undef CT_LINEBREAK
 #undef CT_ANIMATED_TEXTURE
 #undef CT_LISTBOX
-#undef ST_HUD_BACKGROUND
-#undef ST_KEEP_ASPECT_RATIO
+//#undef ST_HUD_BACKGROUND
+//#undef ST_KEEP_ASPECT_RATIO
 #undef CT_ACTIVETEXT
 #undef CT_CHECKBOXES
 #undef CT_PROGRESS
@@ -64,8 +64,8 @@
 #undef ST_CENTER
 #undef CT_CONTEXT_MENU
 #undef ST_LEFT
-#undef ST_SINGLE
-#undef ST_GROUP_BOX2
+//#undef ST_SINGLE
+//#undef ST_GROUP_BOX2
 #undef CT_XBUTTON
 #undef CT_OBJECT_CONTAINER
 #undef CT_XLISTBOX
@@ -73,7 +73,7 @@
 #undef CT_OBJECT_ZOOM
 #undef CT_COMBO
 #undef ST_RIGHT
-#undef ST_LINE
+//#undef ST_LINE
 #undef CT_EDIT
 
 #include "\a3\ui_f\hpp\defineResincl.inc"
