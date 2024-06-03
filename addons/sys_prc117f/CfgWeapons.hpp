@@ -12,7 +12,7 @@ class CfgWeapons {
         scope = 2;
 
         class ItemInfo: CBA_MiscItem_ItemInfo {
-            mass = 120;
+            mass = 30;
             allowedSlots[] = {901};
             scope = 0;
          };
