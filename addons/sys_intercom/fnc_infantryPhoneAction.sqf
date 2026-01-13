@@ -40,14 +40,15 @@ if (isArray _positionConfig) then {
 
 private _infantryPhoneAction = [
     QGVAR(infantryPhone),
-    localize LSTRING(infantryPhone),
-    ICON_RADIO_CALL,
+    LLSTRING(infantryPhone),
+    QPATHTOEF(ace_interact,data\icons\phone.paa),
     {true},
     {
         // Only manually check distance if under main node (not a custom position on hull)
         // Main interaction node is not shown on destroyed vehicle, so we only check that if not main node
         //USES_VARIABLES ["_target", "_player"];
-        if ((_this select 2) isNotEqualTo [0, 0, 0]) exitWith {alive _target};
+        private _targetAlive = alive _target;
+        if (!_targetAlive || {(_this select 2) isNotEqualTo [0, 0, 0]}) exitWith {_targetAlive};
         ([_player, _target] call ace_interaction_fnc_getInteractionDistance) < PHONE_MAXDISTANCE_DEFAULT
     },
     {_this call FUNC(infantryPhoneChildrenActions)},
@@ -68,8 +69,8 @@ if (_position isEqualTo [0, 0, 0]) then {
 // Passenger actions
 private _infantryPhoneSpeakerAction = [
     QGVAR(infantryPhoneSpeaker),
-    localize LSTRING(infantryPhone),
-    ICON_RADIO_CALL,
+    LLSTRING(infantryPhone),
+    QPATHTOEF(ace_interact,data\icons\phone.paa),
     {true},
     {
         private _intercomNames = _target getVariable [QGVAR(intercomNames), []];

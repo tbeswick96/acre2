@@ -15,6 +15,6 @@ if (hasInterface) then {
 };
 
 // CBA Settings
-#include "initSettings.sqf"
+#include "initSettings.inc.sqf"
 
 ADDON = true;

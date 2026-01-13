@@ -36,13 +36,14 @@ for "_i" from 0 to ((count _intercoms) - 1) do {
         _connectionStatus = [_vehicle, _player, _i, INTERCOM_STATIONSTATUS_CONNECTION] call FUNC(getStationConfiguration);
     };
 
+    TRACE_4("Intercom Frame",_vehicle,_player,_infantryPhoneNetwork,_i);
     if (_player == _unitInfantryPhone && {_infantryPhoneNetwork == _i}) then {
         (_vehicle getVariable [QGVAR(infantryPhoneInfo), [[0, 0, 0], 10]]) params ["_infantryPhonePosition", "_infantryPhoneMaxDistance"];
         _infantryPhonePosition = _vehicle modelToWorld _infantryPhonePosition;
         private _playerPosition = ASLToAGL (getPosASL _player);
         TRACE_4("Infantry Phone PFH Check",_infantryPhonePosition,_playerPosition,_infantryPhoneMaxDistance,_player distance _infantryPhonePosition);
         // Add an extra meter leeway due to 3d position check height differences and movement
-        if (_playerPosition distance _infantryPhonePosition >= _infantryPhoneMaxDistance + 1 || {vehicle _player == _vehicle} || {!alive _player} || {captive _player}) then {
+        if (_playerPosition distance _infantryPhonePosition >= _infantryPhoneMaxDistance + 1 || {vehicle _player == _vehicle} || {!alive _player} || {captive _player} || {lifeState _player isEqualTo "INCAPACITATED"}) then {
             [_vehicle, _player, 0, _i] call FUNC(updateInfantryPhoneStatus);
             _intercomUnits = [];
         } else {

@@ -18,11 +18,11 @@
 params ["_class"];
 
 if (isServer) then {
-    if (HASH_HASKEY(EGVAR(sys_server,masterIdTable), _class)) then {
+    if (HASH_HASKEY(EGVAR(sys_server,masterIdTable),_class)) then {
         _ret = true;
     };
 } else {
-    if (HASH_HASKEY(EGVAR(sys_server,objectIdRelationTable), _class)) then {
+    if (HASH_HASKEY(EGVAR(sys_server,objectIdRelationTable),_class)) then {
         _ret = true;
     };
 };

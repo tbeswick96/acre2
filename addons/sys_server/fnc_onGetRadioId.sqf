@@ -26,21 +26,21 @@ if (getNumber (configFile >> "CfgWeapons" >> _class >> "acre_hasUnique") == 0 &&
 
 private _ret = [_class] call FUNC(getRadioId);
 if (_ret != -1) then {
-    private _uniqueClass = format["%1_id_%2", tolower(_class), _ret];
+    private _uniqueClass = format["%1_id_%2", toLower(_class), _ret];
 
     if !(_uniqueClass in GVAR(masterIdList)) then {
         GVAR(masterIdList) pushBack _uniqueClass;
         if (isServer) then {
             private _dataHash = HASH_CREATE;
             if (_replacementId != "") then {
-                _dataHash = HASH_COPY(HASH_GET(EGVAR(sys_data,radioData), _replacementId));
+                _dataHash = HASH_COPY(HASH_GET(EGVAR(sys_data,radioData),_replacementId));
             };
             HASH_SET(EGVAR(sys_data,radioData),_uniqueClass,_dataHash);
         };
-        TRACE_1("callback=", _callback);
+        TRACE_1("callback=",_callback);
         GVAR(unacknowledgedIds) pushBack _uniqueClass;
-        HASH_SET(GVAR(unacknowledgedTable), _uniqueClass, time);
-        HASH_SET(GVAR(masterIdTable), _uniqueClass, [ARR_2(acre_player,acre_player)]);
+        HASH_SET(GVAR(unacknowledgedTable),_uniqueClass,time);
+        HASH_SET(GVAR(masterIdTable),_uniqueClass,[ARR_2(acre_player,acre_player)]);
         [_callback, [_entity, _uniqueClass, _ret, _replacementId]] call CALLSTACK(CBA_fnc_globalEvent);
         // GVAR(waitingForIdAck) = true;
     };

@@ -17,14 +17,14 @@
 
 // Macro instead of func for performance (may be run each frame)
 #define FNC_SETANTENNAELEVATIONTEXT(theText) \
-    private _ctrl = uiNamespace getVariable [ARR_2("ACRE_AntennaElevationInfo", controlNull)]; \
+    private _ctrl = uiNamespace getVariable [ARR_2("ACRE_AntennaElevationInfo",controlNull)]; \
     if (!isNull _ctrl) then { _ctrl ctrlSetText theText; };
 
 
 // Need to run this every frame. Otherwise there will be noticeable delays
 [{
     // Collect data from stance
-    private _stance = tolower (stance acre_player);
+    private _stance = toLower (stance acre_player);
 
     // Hide antenna display if not applicable (in vehicle or other invalid stance or no radio)
     if (_stance == "" || {_stance == "undefined"} || {ACRE_ACTIVE_RADIO == ""}) exitWith {

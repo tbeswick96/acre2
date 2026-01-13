@@ -100,13 +100,13 @@ SQF equivalent of extensions/src/ACRE2Shared/Types.h
 #define DEFUNC(var1,var2) TRIPLES(DOUBLES(PREFIX,var1),fnc,var2)
 
 #define GET_STATE(id)            ([GVAR(currentRadioId), "getState", id] call EFUNC(sys_data,dataEvent))
-#define SET_STATE(id, val)        ([GVAR(currentRadioId), "setState", [id, val]] call EFUNC(sys_data,dataEvent))
-#define SET_STATE_CRIT(id, val)    ([GVAR(currentRadioId), "setStateCritical", [id, val]] call EFUNC(sys_data,dataEvent))
-#define GET_STATE_DEF(id, default)    ([id, default] call FUNC(getDefaultState))
+#define SET_STATE(id, val)        ([GVAR(currentRadioId),"setState",[id,val]] call EFUNC(sys_data,dataEvent))
+#define SET_STATE_CRIT(id, val)    ([GVAR(currentRadioId), "setStateCritical",[id,val]] call EFUNC(sys_data,dataEvent))
+#define GET_STATE_DEF(id, default)    ([id,default] call FUNC(getDefaultState))
 
-#define SCRATCH_SET(radioId, key, val) ([radioId, key, val] call EFUNC(sys_data,setScratchData))
-#define SCRATCH_GET(radioId, key) ([radioId, key] call EFUNC(sys_data,getScratchData))
-#define SCRATCH_GET_DEF(radioId, key, defaultVal) ([radioId, key, defaultVal] call EFUNC(sys_data,getScratchData))
+#define SCRATCH_SET(radioId, key, val) ([radioId,key,val] call EFUNC(sys_data,setScratchData))
+#define SCRATCH_GET(radioId, key) ([radioId,key] call EFUNC(sys_data,getScratchData))
+#define SCRATCH_GET_DEF(radioId, key, defaultVal) ([radioId,key,defaultVal] call EFUNC(sys_data,getScratchData))
 
 #define GET_TS3ID(object) (object call { private _ret = (_this getVariable [QGVAR(ts3id), -1]); if (_ret == -1) then { WARNING_1("%1 has no TS3 ID",_this); }; _ret })
 
@@ -116,16 +116,16 @@ SQF equivalent of extensions/src/ACRE2Shared/Types.h
 #define HASH_CREATE (call EFUNC(main,fastHashCreate))
 #define HASH_DELETE(hash) (ACRE_FAST_HASH_TO_DELETE pushBack hash)
 #define HASH_HASKEY(hash, key) (!(isNil {hash getVariable key}))
-#define HASH_SET(hash, key, val) (hash setVariable [key, val])
+#define HASH_SET(hash, key, val) (hash setVariable [key,val])
 #define HASH_GET(hash, key) (hash getVariable key)
-#define HASH_REM(hash, key) (hash setVariable [key, nil])
+#define HASH_REM(hash, key) (hash setVariable [key,nil])
 #define HASH_COPY(hash) (hash call EFUNC(main,fastHashCopy))
 #define HASH_KEYS(hash) (hash call EFUNC(main,fastHashKeys))
 
 #define HASHLIST_CREATELIST(keys) []
 #define HASHLIST_CREATEHASH(hashList) HASH_CREATE
 #define HASHLIST_SELECT(hashList, index) (hashList select index)
-#define HASHLIST_SET(hashList, index, value) (hashList set[index, value])
+#define HASHLIST_SET(hashList, index, value) (hashList set[index,value])
 #define HASHLIST_PUSH(hashList, value) (hashList pushBack value)
 
 #define BASECLASS(radioId) ([radioId] call EFUNC(sys_radio,getRadioBaseClassname))
@@ -150,6 +150,9 @@ SQF equivalent of extensions/src/ACRE2Shared/Types.h
 
 // Icons
 #define ICON_RADIO_CALL "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\call_ca.paa"
+#define ICON_INTERCOM_CREW "\a3\ui_f\data\IGUI\Cfg\Actions\getindriver_ca.paa"
+#define ICON_INTERCOM_AIRCREW "\a3\ui_f\data\IGUI\Cfg\Actions\getinpilot_ca.paa"
+#define ICON_INTERCOM_PAX "\a3\ui_f\data\IGUI\Cfg\Actions\getincargo_ca.paa"
 
 #define BASE_CLASS_CONFIG(configName) call { private _baseClass = getText(configFile >> "CfgWeapons" >> configName >> "acre_baseClass"); if (_baseClass == "") then { _baseClass = getText(configFile >> "CfgVehicles" >> configName >> "acre_baseClass"); }; _baseClass }
 

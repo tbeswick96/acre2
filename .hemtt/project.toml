@@ -19,17 +19,6 @@ include = [
 [version]
 git_hash = 0
 
-[asc]
-enabled = true
-exclude = [
-    "/initsettings.sqf",
-    "/initkeybinds.sqf",
-    "/xeh_prep.sqf",
-]
-
-[hemtt.config]
-preset = "Hemtt"
-
 [hemtt.release]
 folder = "acre2"
 

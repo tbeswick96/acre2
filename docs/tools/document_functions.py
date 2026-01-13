@@ -71,7 +71,7 @@ class FunctionFile:
         self.header_text = "\n".join([x[3:].strip() for x in self.header.splitlines()])
 
         # Split the header into expected sections
-        self.sections = re.split(r"^(Author|Argument|Return Value|Example|Public)s?:\s?", self.header_text, 0, re.M)
+        self.sections = re.split(r"^(Author|Argument|Return Value|Example|Public)s?:\s?", self.header_text, maxsplit=0, flags=re.M)
 
         # If public section is missing we can't continue
         public_raw = self.get_section("Public")
@@ -275,7 +275,7 @@ def crawl_dir(directory, debug=False, lint_private=False):
     errors = 0
 
     for root, dirs, files in os.walk(directory):
-        for file in files:
+        for file in sorted(files):
             if file.endswith(".sqf") and file.startswith("fnc_"):
                 file_path = os.path.join(root, file)
 

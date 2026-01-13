@@ -24,14 +24,14 @@ private _hasUnique = _type call EFUNC(sys_radio,isBaseClassRadio);
 if (_hasUnique) then {
     private _ret = [_type] call FUNC(getRadioId);
     if (_ret != -1) then {
-         private _uniqueComponent = format ["%1_id_%2", tolower _type, _ret];
+         private _uniqueComponent = format ["%1_id_%2", toLower _type, _ret];
          if !(_uniqueComponent in GVAR(masterIdListd)) then {
              GVAR(masterIdList) pushBack _uniqueComponent;
              private _dataHash = HASH_CREATE;
              HASH_SET(EGVAR(sys_data,radioData),_uniqueComponent,_dataHash);
              GVAR(unacknowledgedIds) pushBack _uniqueComponent;
-             HASH_SET(GVAR(unacknowledgedTable), _uniqueComponent, time);
-             HASH_SET(GVAR(masterIdTable), _uniqueComponent, [ARR_2(_container,_container)]);
+             HASH_SET(GVAR(unacknowledgedTable),_uniqueComponent,time);
+             HASH_SET(GVAR(masterIdTable),_uniqueComponent,[ARR_2(_container,_container)]);
              _container addItemCargoGlobal [_uniqueComponent, 1];
              [_uniqueComponent, "initializeComponent", [_type, _preset]] call EFUNC(sys_data,dataEvent);
              if (_callBack != "") then {

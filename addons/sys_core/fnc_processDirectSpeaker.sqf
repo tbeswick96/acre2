@@ -44,7 +44,7 @@ if (_bothSpectating || {_isIntercomAttenuate}) then {
         _emitterPos = _zeusPosition select 0;
         _emitterDir = _zeusPosition select 1;
     } else {
-        _emitterPos = AGLtoASL (_unit modelToWorldVisual (_unit selectionPosition "head")); //; eyePos _unit;
+        _emitterPos = AGLToASL (_unit modelToWorldVisual (_unit selectionPosition "head")); //; eyePos _unit;
         _emitterDir = eyeDirection _unit;
     };
 };
@@ -92,5 +92,5 @@ if (GVAR(isDeaf) || {_unit getVariable [QGVAR(isDisabled), false]} || {_underwat
 
 private _canUnderstand = [_unit] call FUNC(canUnderstand);
 private _params = [_speakingType, _id, !_canUnderstand, (_directVolume * GVAR(globalVolume))^3, _emitterPos, _emitterDir];
-TRACE_1("SPEAKING UPDATE", _params);
+TRACE_1("SPEAKING UPDATE",_params);
 _params

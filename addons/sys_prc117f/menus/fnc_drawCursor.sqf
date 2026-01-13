@@ -16,7 +16,7 @@
  * Public: No
  */
 
-TRACE_1("drawCursor", _this);
+TRACE_1("drawCursor",_this);
 // Swap the background and foreground colors for a text range
 private ["_saveLength", "_rowCount"]; // TODO - some cases undefined
 private _display = uiNamespace getVariable QGVAR(currentDisplay);
@@ -60,7 +60,7 @@ if (_alignment != ALIGN_LEFT) then {
             _saveLength = _i;
         };
     };
-    TRACE_2("Determined start and save", _start, _saveLength);
+    TRACE_2("Determined start and save",_start,_saveLength);
 } else {
     _saveLength = _rowCount;
 };
@@ -70,7 +70,7 @@ if (_len < 1) then {
     // Find the length of the string, and highlight it
     _len = _saveLength - _start;
 } else {
-    TRACE_2("Highlighting", _start, _len);
+    TRACE_2("Highlighting",_start,_len);
     if (_alignment != ALIGN_LEFT) then {
         _len = _len - 1;
     };
@@ -79,11 +79,11 @@ for "_i" from _start to (_start+_len) do {
     private _textCtrl = _display displayCtrl (_id+_i);
     if (_highlight) then {
 
-        _textCtrl ctrlSetBackgroundColor [0.2, 0.2, 0.2, 1];
-        _textCtrl ctrlSetTextColor [115/255, 126/255, 42/255, 1];
+        _textCtrl ctrlSetBackgroundColor [0.1, 0.1, 0.1, 1];
+        _textCtrl ctrlSetTextColor [82/255, 85/255, 74/255, 1];
     } else {
-        _textCtrl ctrlSetBackgroundColor [0.2, 0.2, 0.2 ,0];
-        _textCtrl ctrlSetTextColor [0.2, 0.2, 0.2, 1]
+        _textCtrl ctrlSetBackgroundColor [0.1, 0.1, 0.1 ,0];
+        _textCtrl ctrlSetTextColor [0.1, 0.1, 0.1, 1]
     };
     _textCtrl ctrlCommit 0;
 };

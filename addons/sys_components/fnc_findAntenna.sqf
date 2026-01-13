@@ -21,11 +21,11 @@ private _foundAntennas = [];
 private _searchedComponents = [];
 private _searchFunction = {
     params ["_componentParentId"];
-    PUSH(_searchedComponents, _componentParentId);
+    PUSH(_searchedComponents,_componentParentId);
     private _componentData = HASH_GET(EGVAR(sys_data,radioData),_componentParentId);
 
     if (!isNil "_componentData") then {
-        private _connectorData = HASH_GET(_componentData, "acre_radioConnectionData");
+        private _connectorData = HASH_GET(_componentData,"acre_radioConnectionData");
         if (!isNil "_connectorData") then {
             {
                 private _connector = _x;
@@ -56,7 +56,7 @@ private _searchFunction = {
                             if (isArray (_configPath >> "acre_antennaMemoryPoints")) then {
                                 private _memoryPoints = getArray (_configPath >> "acre_antennaMemoryPoints");
                                 _memoryPoints = _memoryPoints select (((count _memoryPoints) - 1) min _connectorIndex);
-                                _antennaPos = AGLtoASL (_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 0)));
+                                _antennaPos = AGLToASL (_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 0)));
                             } else {
                                 if (getText (_configPath >> "acre_antennaPosFnc") != "") then {
                                     _antennaPos = [_componentObject, _connectorIndex] call (missionNamespace getVariable (getText (_configPath >> "acre_antennaPosFnc")));
@@ -65,10 +65,10 @@ private _searchFunction = {
                             if (isArray (_configPath >> "acre_antennaMemoryPointsDir")) then {
                                 private _memoryPoints = getArray (_configPath >> "acre_antennaMemoryPointsDir");
                                 _memoryPoints = _memoryPoints select (((count _memoryPoints) - 1) min _connectorIndex);
-                                _antennaDir = AGLtoASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 0))) vectorFromTo
-                                    AGLtoASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 1)));
-                                _antennaDirUp = AGLtoASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 2))) vectorFromTo
-                                    AGLtoASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 3)));
+                                _antennaDir = AGLToASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 0))) vectorFromTo
+                                    AGLToASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 1)));
+                                _antennaDirUp = AGLToASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 2))) vectorFromTo
+                                    AGLToASL(_componentObject modelToWorld (_componentObject selectionPosition (_memoryPoints select 3)));
 
                             } else {
                                 if (getText (_configPath >> "acre_antennaDirFnc") != "") then {
@@ -79,7 +79,7 @@ private _searchFunction = {
                             };
                             private _antennaPos2 = _antennaPos vectorAdd (_antennaDirUp vectorMultiply (getNumber (_componentClass >> "height")));
                             private _foundAntenna = [_connectedComponent, _componentObject, _antennaPos2, _antennaDir];
-                            PUSH(_foundAntennas, _foundAntenna);
+                            PUSH(_foundAntennas,_foundAntenna);
                         };
                     } else {
                         if !(_connectedComponent in _searchedComponents) then {

@@ -65,7 +65,7 @@ private _currentUniqueItems = [];
         if (_hasUnique) then {
             GVAR(requestingNewId) = true;
             ["acre_getRadioId", [acre_player, _radio, QGVAR(returnRadioId)]] call CALLSTACK(CBA_fnc_serverEvent);
-            TRACE_1("Getting ID for", _radio);
+            TRACE_1("Getting ID for",_radio);
         };
     };
 
@@ -95,7 +95,7 @@ if (_dif isNotEqualTo []) then {
                     // simulate a key up event to end the current transmission
                     [] call EFUNC(sys_core,handleMultiPttKeyPressUp);
                 };
-                if ((count _currentUniqueItems) > 0) then {
+                if (_currentUniqueItems isNotEqualTo []) then {
                     [_currentUniqueItems select 0] call EFUNC(sys_radio,setActiveRadio);
                 } else {
                     [""] call EFUNC(sys_radio,setActiveRadio);

@@ -19,10 +19,8 @@
  * Public: No
  */
 
-TRACE_1("GET CURRENT CHANNEL", _this);
+TRACE_1("GET CURRENT CHANNEL",_this);
 
 params ["", "", "", "_radioData", ""];
 
-private _return = 0;
-
-_return
+HASH_GET(_radioData,"currentChannel")
