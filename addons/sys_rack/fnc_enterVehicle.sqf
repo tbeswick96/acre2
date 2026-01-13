@@ -55,21 +55,21 @@ if (!_initialized) then {
     };
 };
 
-    if (EGVAR(sys_core,rememberUsedRackRadios)) then {
-        private _rackedRadiosInUse = _vehicle getVariable [QGVAR(rackedRadiosInUse), []];
-        if (count _rackedRadiosInUse > 0) then {
-            [{
-                params ["_vehicle", "_unit", "_rackedRadiosInUse"];
+// if (EGVAR(sys_core,rememberUsedRackRadios)) then {
+//     private _rackedRadiosInUse = _vehicle getVariable [QGVAR(rackedRadiosInUse), []];
+//     if (count _rackedRadiosInUse > 0) then {
+//         [{
+//             params ["_vehicle", "_unit", "_rackedRadiosInUse"];
 
-                private _rackedRadios = ([_vehicle, _unit] call FUNC(getVehicleRacks)) apply {[_x] call FUNC(getMountedRadio)};
-                {
-                    if (_x in _rackedRadios) then {
-                        [_vehicle, _unit, _x] call FUNC(startUsingMountedRadio);
-                    };
-                } forEach _rackedRadiosInUse;
-            }, [_vehicle, _unit, _rackedRadiosInUse]] call CBA_fnc_execNextFrame;
-        };
-    };
+//             private _rackedRadios = ([_vehicle, _unit] call FUNC(getVehicleRacks)) apply {[_x] call FUNC(getMountedRadio)};
+//             {
+//                 if (_x in _rackedRadios) then {
+//                     [_vehicle, _unit, _x] call FUNC(startUsingMountedRadio);
+//                 };
+//             } forEach _rackedRadiosInUse;
+//         }, [_vehicle, _unit, _rackedRadiosInUse]] call CBA_fnc_execNextFrame;
+//     };
+// };
 
 // Enable the PFH if it is not active (can only be active if the unit is using an external radio before entering the vehicle)
 if (GVAR(rackPFH) == -1) then {
