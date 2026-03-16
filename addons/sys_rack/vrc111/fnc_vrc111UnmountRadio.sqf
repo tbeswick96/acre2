@@ -18,7 +18,9 @@
  * Public: No
  */
 
-params ["", "", "_eventData", ""];
+params ["", "", "_eventData", "", "_remote"];
+
+if (_remote) exitWith {};
 
 private _radioId = _eventData;
 
