@@ -64,8 +64,16 @@ if (_condition) then {
         };
         [_class, _preset] call EFUNC(sys_radio,initDefaultRadio);
 
+        // Temporarily force high priority on the rack so the setState mountedRadio
+        // update (base class → instance ID) propagates immediately instead of with
+        // the default 5 second LOW priority delay, narrowing the window where remote
+        // machines see the base class name as the mounted radio.
+        [_rackId] call EFUNC(sys_data,addHighPriorityId);
+
         //Mount the radio into the rack.
         [_rackId, _class] call FUNC(mountRadio);
+
+        [_rackId] call EFUNC(sys_data,removeHighPriorityId);
     }  else {
         WARNING_2("Radio ID %1 for a vehicle rack was returned for a non-existent base class (%2).",_class,_baseRadio);
     };

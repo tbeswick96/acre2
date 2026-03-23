@@ -25,7 +25,8 @@ _param params ["_player", "_vehicle"];
 if (!isNull objectParent _player) then {
     {
         private _radioId = [_x] call FUNC(getMountedRadio);
-        if (_radioId != "" && {!(_radioId in ACRE_HEARABLE_RACK_RADIOS || {_radioId in ACRE_ACCESSIBLE_RACK_RADIOS})}) then {
+        // getMountedRadio may return a base class name before the radio instance ID is assigned — skip uninitialised radios
+        if (_radioId != "" && {HASH_HASKEY(EGVAR(sys_data,radioData),_radioId)} && {!(_radioId in ACRE_HEARABLE_RACK_RADIOS || {_radioId in ACRE_ACCESSIBLE_RACK_RADIOS})}) then {
             private _functionality = [_radioId, _vehicle, _player, _x] call EFUNC(sys_intercom,getRackRxTxCapabilities);
             if (_functionality > RACK_NO_MONITOR) then {
                 // Add the radio to the active list since it is already active in the intercom system
