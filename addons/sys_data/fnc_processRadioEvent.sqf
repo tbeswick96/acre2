@@ -23,6 +23,7 @@ private _return = nil;
 
 if (!HASH_HASKEY(GVAR(radioData),_radioId)) exitWith {
     WARNING_2("Non-existent radio '%1' called %2 radio event!",_radioId,_event);
+    diag_log format ["[ACRE-DIAG] Non-existent radio '%1' called '%2' radio event. eventKind=%3 data=%4 remote=%5", _radioId, _event, _eventKind, _data, _remote];
     nil
 };
 
