@@ -4,7 +4,7 @@
  * Function called when radio transmission is finished (see sys_data/CfgAcreInterface.hpp).
  *
  * Arguments:
- * 0: Receiving radio ID <STRING> (Unused)
+ * 0: Receiving radio ID <STRING>
  * 1: Event (-> "handleEndTransmission") <STRING> (Unused)
  * 2: Radio ID with transmitting radio Id <ARRAY>
  *
@@ -17,10 +17,12 @@
  * Public: No
  */
 
-params ["", "", "_data"];
+params ["_receiverRadioId", "", "_data"];
 _data params ["_transmitterClass"];
 
 GVAR(transmitterMap) set [_transmitterClass, createHashMap];
+
+["acre_signal_endTransmission", [_receiverRadioId, _transmitterClass]] call CBA_fnc_localEvent;
 
 // missionNamespace setVariable [_transmitterClass + "_running_count", 0];
 // missionNamespace setVariable [_transmitterClass + "_best_signal", -992];
