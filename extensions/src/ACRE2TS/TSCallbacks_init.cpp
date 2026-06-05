@@ -2,6 +2,7 @@
 
 #include "Log.h"
 #include "Engine.h"
+#include "SttPipe.h"
 #include "TS3Client.h"
 #include "CommandServer.h"
 #include "TS3Client.h"
@@ -71,6 +72,10 @@ void ts3plugin_registerPluginID(const char* commandID) {
 int ts3plugin_init() {
     CEngine::getInstance()->initialize(new CTS3Client(), new CCommandServer(), FROM_PIPENAME, TO_PIPENAME);
 
+    // Start the STT pipe writer immediately after the engine exists, so the
+    // capture callback never enqueues frames before the writer thread is up.
+    CSttPipe::getInstance()->start();
+
     // if PluginID was already loaded.
     if (pluginID != NULL) ((CCommandServer *)CEngine::getInstance()->getExternalServer())->setCommandId(pluginID);
     if (ts3Functions.getCurrentServerConnectionHandlerID()) {
@@ -78,7 +83,6 @@ int ts3plugin_init() {
         // virtualize a connect event
         ts3plugin_onConnectStatusChangeEvent(ts3Functions.getCurrentServerConnectionHandlerID(), STATUS_CONNECTION_ESTABLISHED, NULL);
     }
-
 
     return 0;
 }
@@ -121,6 +125,7 @@ void ts3plugin_onPlaybackShutdownCompleteEvent(uint64) {
 }
 
 void ts3plugin_shutdown() {
+    CSttPipe::getInstance()->stop();
     if (CEngine::getInstance()->getClient()->getState() != acre::State::stopped && CEngine::getInstance()->getClient()->getState() != acre::State::stopping) {
         CEngine::getInstance()->getClient()->stop();
     }

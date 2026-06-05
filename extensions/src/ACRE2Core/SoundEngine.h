@@ -8,6 +8,8 @@
 
 #include "SoundMixer.h"
 
+#include <atomic>
+
 
 class CSoundEngine : public CLockable {
 protected:
@@ -23,9 +25,15 @@ public:
     acre::Result onEditMixedPlaybackVoiceDataEvent(short* samples, int sampleCount, int channels, const unsigned int speakerMask);
 
     acre::Result onEditCapturedVoiceDataEvent(short* samples, int sampleCount, int channels);
+    void endSttStreamIfActive();
     CSoundMixer * getSoundMixer() { return this->soundMixer; };
     DECLARE_MEMBER(BOOL, IsRunning);
     DECLARE_MEMBER(acre::CurveModel, CurveModel);
     DECLARE_MEMBER(float, CurveScale);
     DECLARE_MEMBER(int, ChannelCount);
+private:
+    // Written by the TS3 capture thread (the tee) and the stop-speaking path
+    // (endSttStreamIfActive), so it must be atomic. Edge transitions use
+    // exchange() to keep utterance START/END emission race-free.
+    std::atomic<bool> m_sttStreaming{false};
 };

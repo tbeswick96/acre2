@@ -10,6 +10,7 @@
 #include "ext_handleGetClientID.h"
 #include "getPluginVersion.h"
 #include "localMute.h"
+#include "setMicCaptureGate.h"
 #include "setMuted.h"
 #include "startRadioSpeaking.h"
 #include "stopRadioSpeaking.h"
@@ -69,6 +70,7 @@ acre::Result CEngine::initialize(IClient *client, IServer *externalServer, std::
     this->getRpcEngine()->addProcedure(new ext_handleGetClientID());
     this->getRpcEngine()->addProcedure(new getPluginVersion());
     this->getRpcEngine()->addProcedure(new localMute());
+    this->getRpcEngine()->addProcedure(new setMicCaptureGate());
     this->getRpcEngine()->addProcedure(new setMuted());
     this->getRpcEngine()->addProcedure(new startRadioSpeaking());
     this->getRpcEngine()->addProcedure(new stopRadioSpeaking());
@@ -201,6 +203,7 @@ acre::Result CEngine::localStartSpeaking(const acre::Speaking speakingType, cons
 
 acre::Result CEngine::localStopSpeaking( void ) {
     this->getSelf()->setSpeaking(false);
+    this->getSoundEngine()->endSttStreamIfActive();
     CEngine::getInstance()->getExternalServer()->sendMessage(
         CTextMessage::formatNewMessage("ext_remoteStopSpeaking",
             "%d,%s,",

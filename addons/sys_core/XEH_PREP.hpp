@@ -75,4 +75,5 @@ PREP(setInterference);
 PREP(setFullDuplex);
 PREP(ignoreAntennaDirection);
 PREP(setLossModelScale);
+PREP(setMicCaptureGate);
 PREP(setRevealToAI);

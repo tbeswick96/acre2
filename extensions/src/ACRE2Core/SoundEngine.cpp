@@ -1,6 +1,8 @@
 #include "SoundEngine.h"
 #include "AcreSettings.h"
 #include "Engine.h"
+#include "SttPipe.h"
+#include "Self.h"
 
 typedef std::numeric_limits<short int> LIMITER;
 
@@ -98,23 +100,32 @@ acre::Result CSoundEngine::onEditCapturedVoiceDataEvent(short* samples, int samp
         return acre::Result::error;
     if (!CEngine::getInstance()->getGameServer()->getConnected())
         return acre::Result::error;
-    /*
-    if (CEngine::getInstance()->getSelf()) {
-        if (CEngine::getInstance()->getSelf()->getSpeaking()) {
-            CEngine::getInstance()->getSoundEngine()->getSoundMixer()->lock();
-            CSelf *self = CEngine::getInstance()->getSelf();
-            self->lock();
-            for (int i = 0; i < self->channels.size(); ++i) {
-                if (self->channels[i]) {
-                    self->channels[i]->lock();
-                    self->channels[i]->In(samples, sampleCount);
-                    self->channels[i]->unlock();
-                }
+
+    CSelf *self = CEngine::getInstance()->getSelf();
+    if (self) {
+        const bool gate = self->getMicCaptureGate()
+            && self->getSpeakingType() == acre::Speaking::direct
+            && self->getSpeaking();
+        if (gate) {
+            // Rising edge (exchange returns the previous value): begin a new utterance.
+            if (!m_sttStreaming.exchange(true)) {
+                CSttPipe::getInstance()->beginUtterance(48000, static_cast<uint32_t>(channels));
             }
-            self->unlock();
-            CEngine::getInstance()->getSoundEngine()->getSoundMixer()->unlock();
+            // Copy only -- never modify the captured buffer (edited stays untouched).
+            CSttPipe::getInstance()->pushPcm(samples, sampleCount * channels);
+        } else if (m_sttStreaming.exchange(false)) {
+            // Falling edge (gate cleared mid-speech).
+            CSttPipe::getInstance()->endUtterance();
         }
     }
-    */
+
     return acre::Result::ok;
+}
+
+void CSoundEngine::endSttStreamIfActive() {
+    // Called from localStopSpeaking (a different thread to the capture callback);
+    // exchange makes the read-and-clear atomic so END is emitted exactly once.
+    if (m_sttStreaming.exchange(false)) {
+        CSttPipe::getInstance()->endUtterance();
+    }
 }

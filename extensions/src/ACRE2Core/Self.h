@@ -14,8 +14,10 @@ public:
         this->setSpeaking(false);
         this->setCurveModel(acre::CurveModel::original);
         this->setCurrentLanguageId(0);
+        this->setMicCaptureGate(FALSE);
     };
     DECLARE_MEMBER(acre::CurveModel, CurveModel);
     DECLARE_MEMBER(BOOL, Speaking);
     DECLARE_MEMBER(int, CurrentLanguageId);
+    DECLARE_MEMBER(BOOL, MicCaptureGate);
 };
