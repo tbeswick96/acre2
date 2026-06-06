@@ -6,6 +6,7 @@
 
 #include "Player.h"
 
+#include <atomic>
 #include <string>
 
 class CSelf : public CPlayer {
@@ -19,5 +20,12 @@ public:
     DECLARE_MEMBER(acre::CurveModel, CurveModel);
     DECLARE_MEMBER(BOOL, Speaking);
     DECLARE_MEMBER(int, CurrentLanguageId);
-    DECLARE_MEMBER(BOOL, MicCaptureGate);
+
+public:
+    // Written by the RPC thread, read by the audio capture thread.
+    void setMicCaptureGate(BOOL value) { m_MicCaptureGate.store(value != FALSE, std::memory_order_relaxed); }
+    BOOL getMicCaptureGate() { return m_MicCaptureGate.load(std::memory_order_relaxed) ? TRUE : FALSE; }
+
+private:
+    std::atomic<bool> m_MicCaptureGate{false};
 };

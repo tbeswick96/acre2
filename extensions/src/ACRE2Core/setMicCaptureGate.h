@@ -15,7 +15,10 @@ RPC_FUNCTION(setMicCaptureGate) {
 
     const bool enabled = vMessage->getParameterAsInt(0) == 1;
 
-    CEngine::getInstance()->getSelf()->setMicCaptureGate(enabled ? TRUE : FALSE);
+    CSelf *self = CEngine::getInstance()->getSelf();
+    if (self) {
+        self->setMicCaptureGate(enabled ? TRUE : FALSE);
+    }
 
     return acre::Result::ok;
 }

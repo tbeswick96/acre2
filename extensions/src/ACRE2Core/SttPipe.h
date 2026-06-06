@@ -57,7 +57,9 @@ private:
 
     HANDLE m_pipe = INVALID_HANDLE_VALUE;
     ULONGLONG m_lastConnectAttempt = 0;
-    uint32_t m_uttId = 0;
+    uint32_t m_uttId = 0;                    // audio thread only
+    std::atomic<uint32_t> m_currentUttId{0}; // set at START (audio), read at END (any thread)
+    bool m_dropping = false;                 // guarded by m_mutex
 
     static constexpr size_t MAX_QUEUED_BYTES = 2 * 1024 * 1024; // ~10s @ 48k mono int16
     static constexpr ULONGLONG CONNECT_THROTTLE_MS = 500;

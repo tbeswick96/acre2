@@ -104,6 +104,7 @@ if (!GVAR(aceLoaded)) then {
     [] call EFUNC(sys_components,toggleAntennaDir)
 }, [DIK_UPARROW, [false, true, true]]] call CBA_fnc_addKeybind;
 
+#ifdef DEBUG_MODE_FULL
 // Keybinds - Debug
 ["ACRE2", QGVAR(debugMicCaptureGate), "DEBUG: NPC mic capture gate", {
     [true] call FUNC(setMicCaptureGate);
@@ -112,6 +113,7 @@ if (!GVAR(aceLoaded)) then {
     [false] call FUNC(setMicCaptureGate);
     false
 }, [0, [false, false, false]]] call CBA_fnc_addKeybind;
+#endif
 
 // Load map data
 ACRE_MAP_LOADED = false;

@@ -26,6 +26,11 @@ void CSttPipe::stop() {
         return; // not running
     }
     m_cv.notify_all();
+    // Unblock a writer parked in a blocking WriteFile so join() can complete.
+    HANDLE pipe = m_pipe;
+    if (pipe != INVALID_HANDLE_VALUE) {
+        CancelIoEx(pipe, nullptr);
+    }
     if (m_thread.joinable()) {
         m_thread.join();
     }
@@ -33,10 +38,11 @@ void CSttPipe::stop() {
 }
 
 void CSttPipe::beginUtterance(uint32_t sampleRate, uint32_t channels) {
+    const uint32_t uttId = ++m_uttId;
+    m_currentUttId.store(uttId, std::memory_order_relaxed);
     Frame frame;
     frame.type = FRAME_START;
     frame.payload.resize(12);
-    const uint32_t uttId = ++m_uttId;
     std::memcpy(&frame.payload[0], &sampleRate, 4);
     std::memcpy(&frame.payload[4], &channels, 4);
     std::memcpy(&frame.payload[8], &uttId, 4);
@@ -55,38 +61,39 @@ void CSttPipe::pushPcm(const short *samples, int count) {
 }
 
 void CSttPipe::endUtterance() {
+    const uint32_t uttId = m_currentUttId.load(std::memory_order_relaxed);
     Frame frame;
     frame.type = FRAME_END;
     frame.payload.resize(4);
-    std::memcpy(&frame.payload[0], &m_uttId, 4);
+    std::memcpy(&frame.payload[0], &uttId, 4);
     enqueue(std::move(frame));
 }
 
 void CSttPipe::enqueue(Frame &&frame) {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
+        if (frame.type == FRAME_START) {
+            m_dropping = false;
+        }
+        if (m_dropping) {
+            return; // utterance abandoned after overflow; wait for the next START
+        }
         m_queuedBytes += frame.payload.size();
         m_queue.push_back(std::move(frame));
-        // Bound memory if STT is absent/slow: drop the OLDEST DATA frames,
-        // preserving START/END boundary markers so the stream stays parseable.
-        while (m_queuedBytes > MAX_QUEUED_BYTES && !m_queue.empty()) {
-            auto it = m_queue.begin();
-            for (; it != m_queue.end(); ++it) {
-                if (it->type == FRAME_DATA) {
-                    break;
-                }
-            }
-            if (it == m_queue.end()) {
-                break; // only control frames remain
-            }
-            m_queuedBytes -= it->payload.size();
-            m_queue.erase(it);
+        // STT absent/slow: drop the whole utterance rather than leave a buffer
+        // with START/END but missing DATA in between.
+        if (m_queuedBytes > MAX_QUEUED_BYTES) {
+            m_queue.clear();
+            m_queuedBytes = 0;
+            m_dropping = true;
+            return;
         }
     }
     m_cv.notify_one();
 }
 
 void CSttPipe::writerLoop() {
+    bool needStart = false; // after a drop, resync on the next START
     while (m_running.load()) {
         Frame frame;
         {
@@ -101,13 +108,21 @@ void CSttPipe::writerLoop() {
         }
 
         if (!ensureConnected()) {
+            needStart = true;
             continue; // STT not up; drop this frame (queue is already bounded)
+        }
+        if (needStart) {
+            if (frame.type != FRAME_START) {
+                continue; // skip mid-utterance frames until a clean START
+            }
+            needStart = false;
         }
 
         const uint32_t header[2] = {frame.type, static_cast<uint32_t>(frame.payload.size())};
         if (!writeAll(reinterpret_cast<const uint8_t *>(header), sizeof(header)) ||
             (!frame.payload.empty() && !writeAll(frame.payload.data(), frame.payload.size()))) {
-            closePipe(); // write failed; reconnect on the next frame
+            closePipe();
+            needStart = true; // resync after the reconnect
         }
     }
 }
