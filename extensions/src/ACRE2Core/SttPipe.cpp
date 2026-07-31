@@ -92,15 +92,31 @@ void CSttPipe::enqueue(Frame &&frame) {
     m_cv.notify_one();
 }
 
+void CSttPipe::preconnect() {
+    // Wake the writer for a connect-only cycle; the actual CreateFile happens on the
+    // writer thread, never on the game thread that asked.
+    m_preconnect.store(true, std::memory_order_relaxed);
+    m_cv.notify_one();
+}
+
 void CSttPipe::writerLoop() {
     bool needStart = false; // after a drop, resync on the next START
     while (m_running.load()) {
         Frame frame;
         {
             std::unique_lock<std::mutex> lock(m_mutex);
-            m_cv.wait(lock, [this] { return !m_running.load() || !m_queue.empty(); });
+            m_cv.wait(lock, [this] { return !m_running.load() || !m_queue.empty() || m_preconnect.load(); });
             if (!m_running.load()) {
                 break;
+            }
+            if (m_preconnect.exchange(false)) {
+                ensureConnected();
+                if (m_queue.empty()) {
+                    continue;
+                }
+            }
+            if (m_queue.empty()) {
+                continue;
             }
             frame = std::move(m_queue.front());
             m_queue.pop_front();
