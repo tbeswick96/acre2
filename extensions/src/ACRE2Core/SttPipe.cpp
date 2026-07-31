@@ -1,5 +1,6 @@
 #include "SttPipe.h"
 
+#include <chrono>
 #include <cstring>
 
 static const wchar_t *const PIPE_NAME = L"\\\\.\\pipe\\uksf_stt";
@@ -105,15 +106,20 @@ void CSttPipe::writerLoop() {
         Frame frame;
         {
             std::unique_lock<std::mutex> lock(m_mutex);
-            m_cv.wait(lock, [this] { return !m_running.load() || !m_queue.empty() || m_preconnect.load(); });
+            // While a preconnect is wanted, wake periodically: the STT server may not be
+            // listening yet when the gate opens, and a single failed attempt would leave
+            // the connection to be made inside the first utterance, which is then dropped.
+            const auto ready = [this] { return !m_running.load() || !m_queue.empty() || m_preconnect.load(); };
+            if (m_preconnect.load()) {
+                m_cv.wait_for(lock, std::chrono::milliseconds(PRECONNECT_RETRY_MS), ready);
+            } else {
+                m_cv.wait(lock, ready);
+            }
             if (!m_running.load()) {
                 break;
             }
-            if (m_preconnect.exchange(false)) {
-                ensureConnected();
-                if (m_queue.empty()) {
-                    continue;
-                }
+            if (m_preconnect.load() && ensureConnected()) {
+                m_preconnect.store(false, std::memory_order_relaxed); // connected; stop retrying
             }
             if (m_queue.empty()) {
                 continue;

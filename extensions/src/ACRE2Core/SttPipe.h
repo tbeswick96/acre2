@@ -68,4 +68,5 @@ private:
 
     static constexpr size_t MAX_QUEUED_BYTES = 2 * 1024 * 1024; // ~10s @ 48k mono int16
     static constexpr ULONGLONG CONNECT_THROTTLE_MS = 500;
+    static constexpr int PRECONNECT_RETRY_MS = 750; // gate open before the STT server is listening
 };
