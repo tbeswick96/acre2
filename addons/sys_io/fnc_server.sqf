@@ -57,6 +57,7 @@ DFUNC(connectionFnc) = {
                 GVAR(hasErrored) = false;
                 INFO("Pipe opened.");
                 GVAR(serverStarted) = true;
+                [QGVAR(connected), []] call CBA_fnc_localEvent;
 
                 // Move TeamSpeak 3 channel if already in-game (otherwise display XEH will take care of it)
                 if (!isNull (findDisplay 46)) then {

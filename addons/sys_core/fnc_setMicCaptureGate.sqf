@@ -5,6 +5,10 @@
  * to the STT named pipe. The actual capture is additionally gated on
  * Speaking::direct inside the plugin, so this only opens the door.
  *
+ * Desired state is stored in SQF. The TeamSpeak plugin resets CSelf to closed
+ * on every init, so this function only sends the RPC while the ACRE pipe is
+ * up. Pipe-up reapplies the stored state.
+ *
  * Arguments:
  * 0: Enabled <BOOL>
  *
@@ -17,5 +21,9 @@
  * Public: No
  */
 params [["_enabled", false, [false]]];
+
+GVAR(micCaptureGate) = _enabled;
+
+if (EGVAR(sys_io,pipeCode) isNotEqualTo "1") exitWith {};
 
 ["setMicCaptureGate", [_enabled]] call EFUNC(sys_rpc,callRemoteProcedure);

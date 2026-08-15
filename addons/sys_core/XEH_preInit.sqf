@@ -22,6 +22,11 @@ if (!hasInterface) exitWith {
     ADDON = true;
 };
 
+GVAR(micCaptureGate) = false;
+[QEGVAR(sys_io,connected), {
+    [GVAR(micCaptureGate)] call FUNC(setMicCaptureGate);
+}] call CBA_fnc_addEventHandler;
+
 /**
 *
 *
