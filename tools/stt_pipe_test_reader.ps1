@@ -1,6 +1,6 @@
-# Throwaway STT stand-in: serve \\.\pipe\uksf_stt, parse START/DATA/END frames,
-# write each utterance's PCM to a 48kHz mono 16-bit WAV, log boundaries.
-# Run BEFORE toggling the in-game debug gate. Ctrl+C to stop.
+# Throwaway STT stand-in: connect to ACRE's \\.\pipe\uksf_stt server,
+# parse START/DATA/END frames, write each utterance to a 48kHz WAV.
+# Run after TeamSpeak has loaded ACRE. Ctrl+C to stop.
 param([string]$OutDir = "$PSScriptRoot\stt_out")
 
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
@@ -34,21 +34,20 @@ function Write-Wav([string]$path, [byte[]]$pcm, [int]$rate, [int]$channels) {
 }
 
 while ($true) {
-    Write-Host "Waiting for ACRE on \\.\pipe\uksf_stt ..."
-    $server = New-Object System.IO.Pipes.NamedPipeServerStream("uksf_stt",
-        [System.IO.Pipes.PipeDirection]::In, 1,
-        [System.IO.Pipes.PipeTransmissionMode]::Byte)
-    $server.WaitForConnection()
+    Write-Host "Connecting to \\.\pipe\uksf_stt ..."
+    $client = New-Object System.IO.Pipes.NamedPipeClientStream(".", "uksf_stt",
+        [System.IO.Pipes.PipeDirection]::In)
+    try { $client.Connect(500) } catch { Start-Sleep -Milliseconds 500; continue }
     Write-Host "Connected."
     $rate = 48000; $channels = 1; $uttId = 0
     $pcm = New-Object System.Collections.Generic.List[byte]
     try {
         while ($true) {
-            $hdr = Read-Exact $server 8
+            $hdr = Read-Exact $client 8
             if ($null -eq $hdr) { break }
             $type = [BitConverter]::ToUInt32($hdr, 0)
             $len  = [BitConverter]::ToUInt32($hdr, 4)
-            $payload = if ($len -gt 0) { Read-Exact $server $len } else { @() }
+            $payload = if ($len -gt 0) { Read-Exact $client $len } else { @() }
             if ($null -eq $payload) { break }
             switch ($type) {
                 1 { $rate = [BitConverter]::ToUInt32($payload,0)
@@ -64,6 +63,6 @@ while ($true) {
                 default { Write-Host "Unknown frame type $type len $len" }
             }
         }
-    } finally { $server.Dispose() }
+    } finally { $client.Dispose() }
     Write-Host "Disconnected; waiting again."
 }

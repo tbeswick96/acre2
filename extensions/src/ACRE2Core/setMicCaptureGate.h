@@ -8,20 +8,11 @@
 
 #include "IServer.h"
 #include "Engine.h"
-#include "SttPipe.h"
 
 #include "TextMessage.h"
 
 RPC_FUNCTION(setMicCaptureGate) {
-
-    const bool enabled = vMessage->getParameterAsInt(0) == 1;
-
-    CSelf *self = CEngine::getInstance()->getSelf();
-    if (self) {
-        self->setMicCaptureGate(enabled ? TRUE : FALSE);
-    }
-    CSttPipe::getInstance()->setWanted(enabled);
-
+    (void)vMessage;
     return acre::Result::ok;
 }
 public:

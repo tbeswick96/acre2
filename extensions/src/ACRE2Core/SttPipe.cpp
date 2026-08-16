@@ -1,7 +1,8 @@
 #include "SttPipe.h"
+#include "Log.h"
 
-#include <chrono>
 #include <cstring>
+#include <sddl.h>
 
 static const wchar_t *const PIPE_NAME = L"\\\\.\\pipe\\uksf_stt";
 
@@ -17,20 +18,19 @@ CSttPipe::~CSttPipe() {
 void CSttPipe::start() {
     bool expected = false;
     if (!m_running.compare_exchange_strong(expected, true)) {
-        return; // already running
+        return;
     }
     m_thread = std::thread(&CSttPipe::writerLoop, this);
 }
 
 void CSttPipe::stop() {
     if (!m_running.exchange(false)) {
-        return; // not running
+        return;
     }
     m_cv.notify_all();
-    // Unblock a writer parked in a blocking WriteFile so join() can complete.
-    HANDLE pipe = m_pipe;
-    if (pipe != INVALID_HANDLE_VALUE) {
-        CancelIoEx(pipe, nullptr);
+    wakeAccept();
+    if (m_pipe != INVALID_HANDLE_VALUE) {
+        CancelIoEx(m_pipe, nullptr);
     }
     if (m_thread.joinable()) {
         m_thread.join();
@@ -77,95 +77,106 @@ void CSttPipe::enqueue(Frame &&frame) {
             m_dropping = false;
         }
         if (m_dropping) {
-            return; // utterance abandoned after overflow; wait for the next START
+            return;
         }
         m_queuedBytes += frame.payload.size();
         m_queue.push_back(std::move(frame));
-        // STT absent/slow: drop the whole utterance rather than leave a buffer
-        // with START/END but missing DATA in between.
         if (m_queuedBytes > MAX_QUEUED_BYTES) {
             m_queue.clear();
             m_queuedBytes = 0;
             m_dropping = true;
-            return;
         }
     }
-    m_cv.notify_one();
-}
-
-void CSttPipe::setWanted(bool wanted) {
-    m_wanted.store(wanted, std::memory_order_relaxed);
     m_cv.notify_one();
 }
 
 void CSttPipe::writerLoop() {
-    bool needStart = false; // after a drop, resync on the next START
     while (m_running.load()) {
-        Frame frame;
-        {
-            std::unique_lock<std::mutex> lock(m_mutex);
-            // While a preconnect is wanted, wake periodically: the STT server may not be
-            // listening yet when the gate opens, and a single failed attempt would leave
-            // the connection to be made inside the first utterance, which is then dropped.
-            const auto ready = [this] { return !m_running.load() || !m_queue.empty(); };
-            const auto readyOrWanted = [this] {
-                return !m_running.load() || !m_queue.empty()
-                    || (m_wanted.load() && m_pipe == INVALID_HANDLE_VALUE);
-            };
-            if (m_wanted.load() && m_pipe == INVALID_HANDLE_VALUE) {
-                m_cv.wait_for(lock, std::chrono::milliseconds(PRECONNECT_RETRY_MS), ready);
-            } else {
-                m_cv.wait(lock, readyOrWanted);
-            }
+        if (!ensureListening()) {
+            Sleep(500);
+            continue;
+        }
+        if (!acceptClient()) {
             if (!m_running.load()) {
                 break;
             }
-            if (m_wanted.load() && m_pipe == INVALID_HANDLE_VALUE) {
-                ensureConnected();
-            }
-            if (m_queue.empty()) {
-                continue;
-            }
-            frame = std::move(m_queue.front());
-            m_queue.pop_front();
-            m_queuedBytes -= frame.payload.size();
+            dropClient();
+            continue;
         }
+        LOG("STT client connected");
 
-        if (!ensureConnected()) {
-            needStart = true;
-            continue; // STT not up; drop this frame (queue is already bounded)
-        }
-        if (needStart) {
-            if (frame.type != FRAME_START) {
-                continue; // skip mid-utterance frames until a clean START
+        // New client: skip leftover mid-utterance frames until a START.
+        bool needStart = true;
+        while (m_running.load()) {
+            Frame frame;
+            {
+                std::unique_lock<std::mutex> lock(m_mutex);
+                m_cv.wait(lock, [this] { return !m_running.load() || !m_queue.empty(); });
+                if (!m_running.load()) {
+                    return;
+                }
+                frame = std::move(m_queue.front());
+                m_queue.pop_front();
+                m_queuedBytes -= frame.payload.size();
             }
-            needStart = false;
-        }
-
-        const uint32_t header[2] = {frame.type, static_cast<uint32_t>(frame.payload.size())};
-        if (!writeAll(reinterpret_cast<const uint8_t *>(header), sizeof(header)) ||
-            (!frame.payload.empty() && !writeAll(frame.payload.data(), frame.payload.size()))) {
-            closePipe();
-            needStart = true; // resync after the reconnect
+            if (needStart) {
+                if (frame.type != FRAME_START) {
+                    continue;
+                }
+                needStart = false;
+            }
+            const uint32_t header[2] = {frame.type, static_cast<uint32_t>(frame.payload.size())};
+            if (!writeAll(reinterpret_cast<const uint8_t *>(header), sizeof(header)) ||
+                (!frame.payload.empty() && !writeAll(frame.payload.data(), frame.payload.size()))) {
+                LOG("STT client disconnected");
+                dropClient();
+                break;
+            }
         }
     }
 }
 
-bool CSttPipe::ensureConnected() {
+bool CSttPipe::ensureListening() {
     if (m_pipe != INVALID_HANDLE_VALUE) {
         return true;
     }
-    const ULONGLONG now = GetTickCount64();
-    if (now - m_lastConnectAttempt < CONNECT_THROTTLE_MS) {
-        return false; // throttle reconnect attempts
+
+    SECURITY_DESCRIPTOR sd;
+    if (!InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION)) {
+        LOG("STT InitializeSecurityDescriptor: %u", GetLastError());
+        return false;
     }
-    m_lastConnectAttempt = now;
-    HANDLE handle = CreateFileW(PIPE_NAME, GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
+    if (!SetSecurityDescriptorDacl(&sd, TRUE, nullptr, FALSE)) {
+        LOG("STT SetSecurityDescriptorDacl: %u", GetLastError());
+        return false;
+    }
+    SECURITY_ATTRIBUTES sa = { sizeof(SECURITY_ATTRIBUTES), &sd, TRUE };
+
+    HANDLE handle = CreateNamedPipeW(
+        PIPE_NAME,
+        PIPE_ACCESS_OUTBOUND,
+        PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+        1,
+        1 << 16,
+        0,
+        0,
+        &sa
+    );
     if (handle == INVALID_HANDLE_VALUE) {
+        LOG("STT CreateNamedPipe failed: %u", GetLastError());
         return false;
     }
     m_pipe = handle;
+    LOG("STT pipe listening on \\\\.\\pipe\\uksf_stt");
     return true;
+}
+
+bool CSttPipe::acceptClient() {
+    if (ConnectNamedPipe(m_pipe, nullptr)) {
+        return true;
+    }
+    const DWORD err = GetLastError();
+    return err == ERROR_PIPE_CONNECTED;
 }
 
 bool CSttPipe::writeAll(const uint8_t *data, size_t len) {
@@ -180,9 +191,26 @@ bool CSttPipe::writeAll(const uint8_t *data, size_t len) {
     return true;
 }
 
+void CSttPipe::dropClient() {
+    if (m_pipe != INVALID_HANDLE_VALUE) {
+        FlushFileBuffers(m_pipe);
+        DisconnectNamedPipe(m_pipe);
+    }
+}
+
 void CSttPipe::closePipe() {
     if (m_pipe != INVALID_HANDLE_VALUE) {
+        FlushFileBuffers(m_pipe);
+        DisconnectNamedPipe(m_pipe);
         CloseHandle(m_pipe);
         m_pipe = INVALID_HANDLE_VALUE;
+    }
+}
+
+void CSttPipe::wakeAccept() {
+    // Unblock ConnectNamedPipe so stop() can join. Same trick as CNamedPipeServer.
+    HANDLE poke = CreateFileW(PIPE_NAME, GENERIC_READ, 0, nullptr, OPEN_EXISTING, 0, nullptr);
+    if (poke != INVALID_HANDLE_VALUE) {
+        CloseHandle(poke);
     }
 }
