@@ -20,11 +20,7 @@ RPC_FUNCTION(setMicCaptureGate) {
     if (self) {
         self->setMicCaptureGate(enabled ? TRUE : FALSE);
     }
-    if (enabled) {
-        // Connect to the STT server now, while nobody is talking. The writer otherwise
-        // handshakes inside the first utterance and drops it as "STT absent".
-        CSttPipe::getInstance()->preconnect();
-    }
+    CSttPipe::getInstance()->setWanted(enabled);
 
     return acre::Result::ok;
 }

@@ -30,9 +30,8 @@ public:
     void pushPcm(const short *samples, int count); // count = total samples (sampleCount * channels)
     void endUtterance();
 
-    // Connect to the STT server ahead of speech. Without this the handshake happens
-    // inside the first utterance, which the writer then drops as "STT absent".
-    void preconnect();
+    // Keep trying to reach the STT server while the mic gate is wanted.
+    void setWanted(bool wanted);
 
 private:
     CSttPipe() = default;
@@ -60,7 +59,7 @@ private:
     std::atomic<bool> m_running{false};
 
     HANDLE m_pipe = INVALID_HANDLE_VALUE;
-    std::atomic<bool> m_preconnect{false};
+    std::atomic<bool> m_wanted{false};
     ULONGLONG m_lastConnectAttempt = 0;
     uint32_t m_uttId = 0;                    // audio thread only
     std::atomic<uint32_t> m_currentUttId{0}; // set at START (audio), read at END (any thread)
