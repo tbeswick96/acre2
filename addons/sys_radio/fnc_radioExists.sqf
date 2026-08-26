@@ -17,14 +17,8 @@
 
 params ["_class"];
 
-if (isServer) then {
-    if (HASH_HASKEY(EGVAR(sys_server,masterIdTable),_class)) then {
-        _ret = true;
-    };
-} else {
-    if (HASH_HASKEY(EGVAR(sys_server,objectIdRelationTable),_class)) then {
-        _ret = true;
-    };
+if (isServer) exitWith {
+    HASH_HASKEY(EGVAR(sys_server,masterIdTable),_class)
 };
 
-_ret
+HASH_HASKEY(EGVAR(sys_server,objectIdRelationTable),_class)
