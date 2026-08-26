@@ -502,6 +502,9 @@
         <Key ID="STR_ACRE_sys_core_radioNoise_displayName">
             <English>Radio FX Noise</English>
         </Key>
+        <Key ID="STR_ACRE_sys_core_rememberUsedRackRadios_displayName">
+            <English>Remember Vehicle Racks In Use</English>
+        </Key>
         <Key ID="STR_ACRE_sys_core_revealToAI_displayName">
             <English>AI Voice Detection</English>
             <Czech>Detekce hlasu hráčů AIčky</Czech>
@@ -517,9 +520,6 @@
             <Chinese>AI偵測玩家語音</Chinese>
             <Chinesesimp>AI侦测玩家语音</Chinesesimp>
             <Turkish>Yapay Zeka Ses Fark Etmesi</Turkish>
-        </Key>
-        <Key ID="STR_ACRE_sys_core_rememberUsedRackRadios_displayName">
-            <English>Remember Vehicle Racks In Use</English>
         </Key>
         <Key ID="STR_ACRE_sys_core_spectatorVolume_displayName">
             <English>Spectator Volume</English>

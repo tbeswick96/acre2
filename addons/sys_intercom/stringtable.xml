@@ -403,6 +403,14 @@
             <Chinesesimp>从其他通讯网路断开。并连接至下一个网路。</Chinesesimp>
             <Turkish>Sonraki interkom ağına bağlanıp diğerlerinden ayrılır</Turkish>
         </Key>
+        <Key ID="STR_ACRE_sys_intercom_nextWorkKnobKey">
+            <English>Next Work Knob Position</English>
+            <German>Nächste Work-Knopfposition</German>
+        </Key>
+        <Key ID="STR_ACRE_sys_intercom_nextWorkKnobKey_description">
+            <English>Switches to the next radio rack and sets it as the transmitting radio within the first connected intercom network.</English>
+            <German>Setzt das nächste Fahrzeugfunkgerät als sendendes Funkgerät im ersten verbundenen Bordfunknetzwerk.</German>
+        </Key>
         <Key ID="STR_ACRE_sys_intercom_open">
             <English>Open</English>
             <Czech>Otevřít</Czech>
@@ -476,6 +484,14 @@
             <Chinese>從其他通訊網路斷開。並連接至上一個網路。</Chinese>
             <Chinesesimp>从其他通讯网路断开。并链接至上一个网路。</Chinesesimp>
             <Turkish>Önceki interkom ağına bağlanıp diğerlerinden ayrılır</Turkish>
+        </Key>
+        <Key ID="STR_ACRE_sys_intercom_previousWorkKnobKey">
+            <English>Previous Work Knob Position</English>
+            <German>Vorherige Work-Knopfposition</German>
+        </Key>
+        <Key ID="STR_ACRE_sys_intercom_previousWorkKnobKey_description">
+            <English>Switches to the previous radio rack and sets it as the transmitting radio within the first connected intercom network.</English>
+            <German>Setzt das vorherige Fahrzeugfunkgerät als sendendes Funkgerät im ersten verbundenen Bordfunknetzwerk.</German>
         </Key>
         <Key ID="STR_ACRE_sys_intercom_recAndTrans">
             <English>Receive and Transmit</English>
@@ -632,22 +648,6 @@
             <Chinese>只發送</Chinese>
             <Chinesesimp>只发送</Chinesesimp>
             <Turkish>Sadece İletme</Turkish>
-        </Key>
-        <Key ID="STR_ACRE_sys_intercom_previousWorkKnobKey">
-            <English>Previous Work Knob Position</English>
-            <German>Vorherige Work-Knopfposition</German>
-        </Key>
-        <Key ID="STR_ACRE_sys_intercom_previousWorkKnobKey_description">
-            <English>Switches to the previous radio rack and sets it as the transmitting radio within the first connected intercom network.</English>
-            <German>Setzt das vorherige Fahrzeugfunkgerät als sendendes Funkgerät im ersten verbundenen Bordfunknetzwerk.</German>
-        </Key>
-        <Key ID="STR_ACRE_sys_intercom_nextWorkKnobKey">
-            <English>Next Work Knob Position</English>
-            <German>Nächste Work-Knopfposition</German>
-        </Key>
-        <Key ID="STR_ACRE_sys_intercom_nextWorkKnobKey_description">
-            <English>Switches to the next radio rack and sets it as the transmitting radio within the first connected intercom network.</English>
-            <German>Setzt das nächste Fahrzeugfunkgerät als sendendes Funkgerät im ersten verbundenen Bordfunknetzwerk.</German>
         </Key>
     </Package>
 </Project>
