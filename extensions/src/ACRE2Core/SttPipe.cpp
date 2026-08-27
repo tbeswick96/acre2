@@ -16,14 +16,34 @@ CSttPipe::~CSttPipe() {
 }
 
 void CSttPipe::start() {
-    bool expected = false;
-    if (!m_running.compare_exchange_strong(expected, true)) {
+    std::lock_guard<std::mutex> lock(m_lifecycleMutex);
+    if (m_running.load()) {
         return;
     }
+    if (m_thread.joinable()) {
+        m_thread.join();
+    }
+    m_running.store(true);
     m_thread = std::thread(&CSttPipe::writerLoop, this);
 }
 
+void CSttPipe::requestStop() {
+    std::lock_guard<std::mutex> lock(m_lifecycleMutex);
+    signalStop();
+    clearQueue();
+}
+
 void CSttPipe::stop() {
+    std::lock_guard<std::mutex> lock(m_lifecycleMutex);
+    signalStop();
+    if (m_thread.joinable()) {
+        m_thread.join();
+    }
+    closePipe();
+    clearQueue();
+}
+
+void CSttPipe::signalStop() {
     if (!m_running.exchange(false)) {
         return;
     }
@@ -33,9 +53,15 @@ void CSttPipe::stop() {
         CancelIoEx(m_pipe, nullptr);
     }
     if (m_thread.joinable()) {
-        m_thread.join();
+        CancelSynchronousIo(m_thread.native_handle());
     }
-    closePipe();
+}
+
+void CSttPipe::clearQueue() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_queue.clear();
+    m_queuedBytes = 0;
+    m_dropping = false;
 }
 
 void CSttPipe::beginUtterance(uint32_t sampleRate, uint32_t channels) {
@@ -73,6 +99,9 @@ void CSttPipe::endUtterance() {
 void CSttPipe::enqueue(Frame &&frame) {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
+        if (!m_running.load()) {
+            return;
+        }
         if (frame.type == FRAME_START) {
             m_dropping = false;
         }
@@ -113,7 +142,7 @@ void CSttPipe::writerLoop() {
                 std::unique_lock<std::mutex> lock(m_mutex);
                 m_cv.wait(lock, [this] { return !m_running.load() || !m_queue.empty(); });
                 if (!m_running.load()) {
-                    return;
+                    break;
                 }
                 frame = std::move(m_queue.front());
                 m_queue.pop_front();
@@ -134,6 +163,7 @@ void CSttPipe::writerLoop() {
             }
         }
     }
+    closePipe();
 }
 
 bool CSttPipe::ensureListening() {
@@ -193,14 +223,12 @@ bool CSttPipe::writeAll(const uint8_t *data, size_t len) {
 
 void CSttPipe::dropClient() {
     if (m_pipe != INVALID_HANDLE_VALUE) {
-        FlushFileBuffers(m_pipe);
         DisconnectNamedPipe(m_pipe);
     }
 }
 
 void CSttPipe::closePipe() {
     if (m_pipe != INVALID_HANDLE_VALUE) {
-        FlushFileBuffers(m_pipe);
         DisconnectNamedPipe(m_pipe);
         CloseHandle(m_pipe);
         m_pipe = INVALID_HANDLE_VALUE;

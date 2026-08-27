@@ -72,10 +72,6 @@ void ts3plugin_registerPluginID(const char* commandID) {
 int ts3plugin_init() {
     CEngine::getInstance()->initialize(new CTS3Client(), new CCommandServer(), FROM_PIPENAME, TO_PIPENAME);
 
-    // Start the STT pipe writer immediately after the engine exists, so the
-    // capture callback never enqueues frames before the writer thread is up.
-    CSttPipe::getInstance()->start();
-
     // if PluginID was already loaded.
     if (pluginID != NULL) ((CCommandServer *)CEngine::getInstance()->getExternalServer())->setCommandId(pluginID);
     if (ts3Functions.getCurrentServerConnectionHandlerID()) {

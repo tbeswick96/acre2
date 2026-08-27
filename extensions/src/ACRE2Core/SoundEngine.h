@@ -18,7 +18,7 @@ public:
     CSoundEngine( void );
     ~CSoundEngine();
     acre::Result onClientGameConnected( void ) { this->setIsRunning(true); return acre::Result::ok; };
-    acre::Result onClientGameDisconnected( void ) { this->setIsRunning(false); return acre::Result::ok; };
+    acre::Result onClientGameDisconnected( void );
 
     acre::Result onEditPlaybackVoiceDataEvent(acre::id_t id, short* samples, int sampleCount, int channels);
     acre::Result onEditPostProcessVoiceDataEvent(acre::id_t id, short* samples, int sampleCount, int channels, const unsigned int* channelSpeakerArray, unsigned int* channelFillMask);

@@ -10,6 +10,17 @@ CSoundEngine::CSoundEngine( void ) {
     this->soundMixer = new CSoundMixer();
 }
 
+acre::Result CSoundEngine::onClientGameDisconnected() {
+    CSelf *self = CEngine::getInstance()->getSelf();
+    if (self) {
+        self->setMicCaptureGate(FALSE);
+    }
+    endSttStreamIfActive();
+    CSttPipe::getInstance()->requestStop();
+    this->setIsRunning(false);
+    return acre::Result::ok;
+}
+
 acre::Result CSoundEngine::onEditPlaybackVoiceDataEvent(acre::id_t id, short* samples, int sampleCount, int channels) {
     if (CEngine::getInstance()->getSoundSystemOverride())
         return acre::Result::ok;
@@ -103,7 +114,8 @@ acre::Result CSoundEngine::onEditCapturedVoiceDataEvent(short* samples, int samp
 
     CSelf *self = CEngine::getInstance()->getSelf();
     if (self) {
-        const bool gate = self->getSpeakingType() == acre::Speaking::direct
+        const bool gate = self->getMicCaptureGate()
+            && self->getSpeakingType() == acre::Speaking::direct
             && self->getSpeaking();
         if (gate) {
             // Rising edge (exchange returns the previous value): begin a new utterance.

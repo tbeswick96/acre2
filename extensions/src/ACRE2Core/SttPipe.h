@@ -10,9 +10,9 @@
 #include <vector>
 
 // Writes the local player's direct-speech mic PCM to \\.\pipe\uksf_stt as a
-// framed stream. ACRE is the pipe SERVER (created at plugin init). UKSF is
-// the client and connects at sttStart. All blocking pipe I/O happens on the
-// writer thread; the audio callback only enqueues.
+// framed stream. ACRE is the pipe server, started only when UKSF opts in to
+// STT. All blocking pipe I/O happens on the writer thread; the audio callback
+// only enqueues.
 //
 // Wire protocol (little-endian): [uint32 type][uint32 payloadLen][payload].
 //   START (type 1): uint32 sampleRate, uint32 channels, uint32 uttId
@@ -22,8 +22,9 @@ class CSttPipe {
 public:
     static CSttPipe *getInstance();
 
-    void start(); // create the pipe + writer (idempotent)
-    void stop();  // signal + join + close (idempotent)
+    void start();       // create the pipe + writer (idempotent)
+    void requestStop(); // signal cancellation without blocking the caller
+    void stop();        // signal + join + close (idempotent)
 
     // Producer API -- any thread; never blocks on pipe I/O.
     void beginUtterance(uint32_t sampleRate, uint32_t channels);
@@ -43,6 +44,8 @@ private:
     };
 
     void enqueue(Frame &&frame);
+    void signalStop();
+    void clearQueue();
     void writerLoop();
     bool ensureListening();
     bool acceptClient();
@@ -54,6 +57,7 @@ private:
     std::deque<Frame> m_queue;
     size_t m_queuedBytes = 0;
     std::mutex m_mutex;
+    std::mutex m_lifecycleMutex;
     std::condition_variable m_cv;
     std::thread m_thread;
     std::atomic<bool> m_running{false};
