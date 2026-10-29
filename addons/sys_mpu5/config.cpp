@@ -6,7 +6,7 @@ class CfgPatches {
         units[] = {};
         weapons[] = {RADIO_WEAPON_LIST_STR(ACRE_MPU5)};
         requiredVersion = REQUIRED_VERSION;
-        requiredAddons[] = {"acre_sys_radio", "acre_sys_modes", "acre_sys_bf888s", "acre_sys_prc152"};
+        requiredAddons[] = {"acre_sys_radio", "acre_sys_modes", "acre_sys_bf888s"};
         author = ECSTRING(main,Author);
         authors[] = {"UKSF"};
         url = ECSTRING(main,URL);

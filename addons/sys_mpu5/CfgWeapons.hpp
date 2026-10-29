@@ -5,8 +5,8 @@ class CfgWeapons {
     class ACRE_MPU5: ACRE_BaseRadio {
         displayName = QUOTE(NAME_MPU5);
         useActionTitle = QUOTE(NAME_MPU5);
-        picture = QPATHTOEF(sys_prc152,Data\PRC152c_ico.paa);
-        model = QPATHTOEF(sys_prc152,Data\Models\PRC152.p3d);
+        picture = QPATHTOF(data\mpu5_icon_ca.paa);
+        model = QPATHTOF(data\MPU5.p3d);
         descriptionShort = "Persistent Systems MPU-5 Wave Relay MANET radio";
 
         scopeCurator = 2;
