@@ -1,0 +1,15 @@
+PREP(closeGui);
+PREP(getChannelData);
+PREP(getChannelDescription);
+PREP(getCurrentChannelData);
+PREP(getMeshStatus);
+PREP(getMonitors);
+PREP(handleMultipleTransmissions);
+PREP(meshAvailability);
+PREP(meshHops);
+PREP(meshSpeaking);
+PREP(openGui);
+PREP(presetInformation);
+PREP(setMonitors);
+PREP(updateLinks);
+PREP(updateNodes);
