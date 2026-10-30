@@ -72,7 +72,7 @@ class CfgAcreComponents {
                 handleMultipleTransmissions = QFUNC(handleMultipleTransmissions);
                 getReceiveAudio = QFUNC(getReceiveAudio);
 
-                handlePTTDown = QEFUNC(sys_bf888s,handlePTTDown);
+                handlePTTDown = QFUNC(handlePTTDown);
                 handlePTTUp = QEFUNC(sys_bf888s,handlePTTUp);
             };
 

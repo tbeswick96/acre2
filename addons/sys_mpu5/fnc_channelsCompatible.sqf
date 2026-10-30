@@ -1,7 +1,7 @@
 #include "script_component.hpp"
 /*
  * Author: UKSF
- * Checks if a receiving radio channel can decode a transmitting radio channel. The check compares modulation, encryption key, and CTCSS tone in the same way as the ACRE single-channel radios.
+ * Checks if a receiving radio channel can decode a transmitting radio channel. The rules match the ACRE single-channel decoder: modulation must match, encrypted traffic needs the same key and traffic rate, clear FM and NB traffic needs a matching CTCSS tone unless the receiver has none, and clear AM traffic always decodes.
  *
  * Arguments:
  * 0: Transmitting channel data <HASH>
@@ -18,10 +18,16 @@
 
 params ["_txData", "_rxData"];
 
-private _encryption = _txData getVariable ["encryption", 0];
+private _modulation = _rxData getVariable ["modulation", ""];
+private _rxEncryption = _rxData getVariable ["encryption", 0];
+private _txEncryption = _txData getVariable ["encryption", 0];
 private _ctcss = _rxData getVariable ["CTCSSRx", 0];
 
-(_txData getVariable ["modulation", ""]) == (_rxData getVariable ["modulation", ""])
-&& {_encryption == (_rxData getVariable ["encryption", 0])}
-&& {_encryption == 0 || {(_txData getVariable ["TEK", 0]) isEqualTo (_rxData getVariable ["TEK", 0])}}
-&& {_ctcss == 0 || {_ctcss == (_txData getVariable ["CTCSSTx", 0])}}
+if (_modulation != (_txData getVariable ["modulation", ""])) exitWith {false};
+if (_rxEncryption == 1 && {_txEncryption == 1}) exitWith {
+    (_rxData getVariable ["TEK", 0]) isEqualTo (_txData getVariable ["TEK", 0])
+    && {(_rxData getVariable ["trafficRate", 0]) isEqualTo (_txData getVariable ["trafficRate", 0])}
+};
+if (_rxEncryption != 0 || {_txEncryption != 0}) exitWith {false};
+if (_modulation in ["FM", "NB"]) exitWith {_ctcss == 0 || {_ctcss == (_txData getVariable ["CTCSSTx", 0])}};
+_modulation == "AM"

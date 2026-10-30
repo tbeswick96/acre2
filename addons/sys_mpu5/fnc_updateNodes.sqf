@@ -1,7 +1,7 @@
 #include "script_component.hpp"
 /*
  * Author: UKSF
- * Rebuilds the list of powered MPU-5 mesh nodes, drops the links of nodes that left the mesh, and rebuilds the list of radio over IP links whose ordinary radio is powered and next to its MPU-5.
+ * Rebuilds the list of powered MPU-5 mesh nodes, drops the links of nodes that left the mesh, and rebuilds the list of radio over IP links whose ordinary radio is powered and carried by the same unit or container as its MPU-5.
  *
  * Arguments:
  * None
@@ -39,7 +39,7 @@ private _gateways = [];
     ([_x] call FUNC(getGateway)) params [["_legacyId", ""], ["_talkgroup", 0]];
     if (_legacyId != "" && {[_legacyId] call EFUNC(sys_data,isRadioInitialized)} && {([_legacyId, "getOnOffState"] call EFUNC(sys_data,dataEvent)) isEqualTo 1}) then {
         private _legacyObject = (EGVAR(sys_server,objectIdRelationTable) getVariable [_legacyId, []]) param [0, objNull];
-        if (!isNull _legacyObject && {_legacyObject distance _y <= MPU5_GATEWAY_RANGE}) then {
+        if (!isNull _legacyObject && {_legacyObject isEqualTo _y}) then {
             _gateways pushBack [_x, _legacyId, _talkgroup];
         };
     };

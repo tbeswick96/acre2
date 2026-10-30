@@ -20,5 +20,9 @@ GVAR(gatewayHeard) = createHashMap;
 GVAR(bridgeData) = createHashMap;
 GVAR(txSlotActive) = 0;
 GVAR(txSlotRadio) = "";
+GVAR(txSession) = 0;
+GVAR(txSlotKeyed) = false;
+GVAR(txSlotKeying) = false;
+GVAR(txSwitchTime) = -1;
 
 ADDON = true;

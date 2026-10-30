@@ -14,6 +14,7 @@ PREP(getMonitors);
 PREP(getReceiveAudio);
 PREP(getTxSlots);
 PREP(handleMultipleTransmissions);
+PREP(handlePTTDown);
 PREP(meshAvailability);
 PREP(meshHops);
 PREP(meshSpeaking);
