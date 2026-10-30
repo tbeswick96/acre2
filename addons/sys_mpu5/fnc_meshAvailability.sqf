@@ -1,7 +1,7 @@
 #include "script_component.hpp"
 /*
  * Author: UKSF
- * Checks if a receiving radio listens to the talk group of a transmitting MPU-5. The receiver hears its active talk group, its monitored talk groups, and the emergency talk group.
+ * Checks if a receiving radio listens to the talk group of a transmitting MPU-5. An MPU-5 hears its active talk group, its monitored talk groups, its TX slot talk groups, and the emergency talk group. An ordinary radio hears the talk group through a radio over IP link.
  *
  * Arguments:
  * 0: Transmitting radio ID <STRING>
@@ -19,11 +19,8 @@
 params ["_txRadioId", "_rxRadioId"];
 
 private _rxData = [_rxRadioId, "getCurrentChannelData"] call EFUNC(sys_data,dataEvent);
-if (HASH_GET(_rxData,"mode") != "mpu5Mesh") exitWith {false};
+if (HASH_GET(_rxData,"mode") != "mpu5Mesh") exitWith {
+    ([_txRadioId, _rxRadioId] call FUNC(gatewayMatches)) isNotEqualTo []
+};
 
-private _txData = [_txRadioId, "getCurrentChannelData"] call EFUNC(sys_data,dataEvent);
-private _talkgroup = HASH_GET(_txData,"talkgroup");
-
-_talkgroup == HASH_GET(_rxData,"talkgroup")
-|| {_talkgroup == MPU5_EMERGENCY_TALKGROUP}
-|| {_talkgroup in ([_rxRadioId] call FUNC(getMonitors))}
+[_rxRadioId, [_txRadioId] call FUNC(txTalkgroup)] call FUNC(receivesTalkgroup)

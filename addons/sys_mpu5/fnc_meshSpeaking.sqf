@@ -1,7 +1,7 @@
 #include "script_component.hpp"
 /*
  * Author: UKSF
- * Calculates the signal of an MPU-5 transmission on the receiving client from the mesh path between the two radios.
+ * Calculates the signal of an MPU-5 transmission on the receiving client from the mesh path between the two radios. An ordinary receiving radio uses the radio over IP link signal.
  *
  * Arguments:
  * 0: Transmitter <OBJECT>
@@ -20,12 +20,17 @@
 
 params ["", "_txRadioId", "", "_rxRadioId"];
 
+private _rxData = [_rxRadioId, "getCurrentChannelData"] call EFUNC(sys_data,dataEvent);
+if (HASH_GET(_rxData,"mode") != "mpu5Mesh") exitWith {
+    _this call FUNC(gatewaySpeaking)
+};
+
 private _signal = [0, -993];
 
 if (_rxRadioId != _txRadioId) then {
     private _hops = [_txRadioId, _rxRadioId] call FUNC(meshHops);
     if (_hops > 0) then {
-        _signal = [(1 - 0.02 * (_hops - 1)) max 0.8, -60];
+        _signal = [MPU5_HOP_QUALITY(_hops), -60];
     };
 } else {
     if ((toLower _txRadioId) in ACRE_SPECTATOR_RADIOS) then {

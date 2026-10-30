@@ -20,7 +20,13 @@
 
 params ["_radioId"];
 
-private _talkgroup = ([_radioId, "getCurrentChannel"] call EFUNC(sys_data,dataEvent)) + 1;
+private _channel = [_radioId, "getCurrentChannel"] call EFUNC(sys_data,dataEvent);
+if (_channel == MPU5_BRIDGE_CHANNEL) exitWith {
+    private _data = [_radioId, "getCurrentChannelData"] call EFUNC(sys_data,dataEvent);
+    format ["BRIDGE %1 MHz", HASH_GET(_data,"frequencyRX")]
+};
+
+private _talkgroup = _channel + 1;
 private _monitors = [_radioId] call FUNC(getMonitors);
 
 if (_monitors isEqualTo []) exitWith {

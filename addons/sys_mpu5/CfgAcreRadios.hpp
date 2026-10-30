@@ -44,7 +44,7 @@ class CfgAcreComponents {
                 getCurrentChannelData = QFUNC(getCurrentChannelData);
 
                 getCurrentChannel = QEFUNC(sys_bf888s,getCurrentChannel);
-                setCurrentChannel = QEFUNC(sys_bf888s,setCurrentChannel);
+                setCurrentChannel = QFUNC(setCurrentChannel);
 
                 getStates = QEFUNC(sys_bf888s,getStates);
                 getState = QEFUNC(sys_bf888s,getState);
@@ -70,6 +70,7 @@ class CfgAcreComponents {
 
                 handleSignalData = QEFUNC(sys_bf888s,handleSignalData);
                 handleMultipleTransmissions = QFUNC(handleMultipleTransmissions);
+                getReceiveAudio = QFUNC(getReceiveAudio);
 
                 handlePTTDown = QEFUNC(sys_bf888s,handlePTTDown);
                 handlePTTUp = QEFUNC(sys_bf888s,handlePTTUp);

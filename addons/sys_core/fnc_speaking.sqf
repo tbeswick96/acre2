@@ -189,6 +189,14 @@ if (GVAR(keyedMicRadios) isNotEqualTo []) then {
                             _params set [0, _radioVolume * _volumeModifier];
                             TRACE_3("volume (normal)",_params select 0,_radioVolume,_volumeModifier);
                         };
+                        private _receiveAudio = [_recRadio, "getReceiveAudio", _x select 1] call EFUNC(sys_data,transEvent);
+                        if (!isNil "_receiveAudio") then {
+                            _receiveAudio params ["_volumeScale", "_receiveEar"];
+                            _params set [0, (_params select 0) * _volumeScale];
+                            if (!(_params select 3) && {_receiveEar in [-1, 0, 1]}) then {
+                                _params set [4, [_receiveEar * 2, 0, 0]];
+                            };
+                        };
                         _params set [1, _signalData select 0];
                         _speakingRadios pushBack _params;
                     };

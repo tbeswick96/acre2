@@ -18,6 +18,10 @@
  * Public: No
  */
 
-params ["", "", "_eventData"];
+params ["_radioId", "", "_eventData", "_radioData"];
+
+if (_eventData == MPU5_BRIDGE_CHANNEL) exitWith {
+    [_radioId, _radioData] call FUNC(bridgeChannelData)
+};
 
 GVAR(channelData) select ((0 max _eventData) min (MPU5_TALKGROUPS - 1))

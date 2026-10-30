@@ -18,11 +18,15 @@
  * Public: No
  */
 
-params ["", "", "", "_radioData"];
+params ["_radioId", "", "", "_radioData"];
 
 private _channel = HASH_GET(_radioData,"currentChannel");
 if (isNil "_channel") then {
     _channel = 0;
+};
+
+if (_channel == MPU5_BRIDGE_CHANNEL) exitWith {
+    [_radioId, _radioData] call FUNC(bridgeChannelData)
 };
 
 GVAR(channelData) select _channel

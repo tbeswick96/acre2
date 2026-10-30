@@ -15,5 +15,10 @@ GVAR(nodeIds) = [];
 GVAR(links) = createHashMap;
 GVAR(linkCursor) = 0;
 GVAR(reachCache) = createHashMap;
+GVAR(gateways) = [];
+GVAR(gatewayHeard) = createHashMap;
+GVAR(bridgeData) = createHashMap;
+GVAR(txSlotActive) = 0;
+GVAR(txSlotRadio) = "";
 
 ADDON = true;

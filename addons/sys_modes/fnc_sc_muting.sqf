@@ -23,6 +23,10 @@ private _radioRxData = [_radioId2, "getCurrentChannelData"] call EFUNC(sys_data,
 
 private _mode1 = HASH_GET(_radioTxData,"mode");
 private _mode2 = HASH_GET(_radioRxData,"mode");
+
+if (_mode2 == "mpu5Mesh") exitWith {
+    ([_radioId1, _radioId2] call (missionNamespace getVariable ["acre_sys_mpu5_fnc_gatewayMatches", {[]}])) isNotEqualTo []
+};
 private _match = false;
 private _modeIsSingleChannel = (_mode1 == "singleChannel") && {_mode1 == _mode2};
 private _modeIsSingleChannelPRR = (_mode1 == "singleChannelPRR") && {_mode1 == _mode2};

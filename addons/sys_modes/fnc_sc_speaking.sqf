@@ -20,6 +20,11 @@
 
 params ["", "_txRadioId", "", "_rxRadioId"];
 
+private _rxData = [_rxRadioId, "getCurrentChannelData"] call EFUNC(sys_data,dataEvent);
+if (HASH_GET(_rxData,"mode") == "mpu5Mesh") exitWith {
+    _this call acre_sys_mpu5_fnc_gatewaySpeaking
+};
+
 private _txData = [_txRadioId, "getCurrentChannelData"] call EFUNC(sys_data,dataEvent);
 private _txFreq = HASH_GET(_txData,"frequencyTX");
 private _txPower = HASH_GET(_txData,"power");
