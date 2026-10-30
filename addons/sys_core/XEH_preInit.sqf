@@ -58,6 +58,7 @@ DGVAR(threadedExtCalls) = [];
 DGVAR(nearRadios) = [];
 
 DGVAR(pttKeyDown) = false;
+DGVAR(pttAcquisition) = 0;
 
 DGVAR(speaking_cache_valid) = false;
 

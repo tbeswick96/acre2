@@ -61,6 +61,7 @@ if (ACRE_ACTIVE_PTTKEY == -2) then {
                 ACRE_BROADCASTING_RADIOID = _sendRadio;
                 // diag_log text format["ASSIGNED ACRE_BROADCASTING_RADIOID KEYDOWN: %1", ACRE_BROADCASTING_RADIOID];
                 GVAR(pttKeyDown) = true;
+                GVAR(pttAcquisition) = GVAR(pttAcquisition) + 1;
 
                 ["startRadioSpeaking", _sendRadio] call EFUNC(sys_rpc,callRemoteProcedure);
                 [] call FUNC(showBroadCastHint);

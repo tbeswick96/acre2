@@ -2,7 +2,7 @@
 /*
  * Author: UKSF
  * Handles a TX slot key of the player's MPU-5. Key down transmits on the talk group in the slot without changing the active talk group. When the talk group changes, the radio waits a short time before it keys so that other clients receive the new talk group first.
- * Each key press is a session. Delayed work from an older session does nothing, a key release only releases PTT that its own session keyed, and the talk group override resets only when no newer session has started.
+ * Each key press is a session. Delayed work from an older session does nothing, a key release only releases PTT while the PTT acquisition that its own session made is still the current one, and the talk group override resets only when no newer session has started.
  *
  * Arguments:
  * 0: TX slot, 1 to 4 <NUMBER>
@@ -22,10 +22,10 @@ params ["_slot", "_down"];
 if (!_down) exitWith {
     if (GVAR(txSlotActive) != _slot) exitWith {false};
     GVAR(txSlotActive) = 0;
-    if (GVAR(txSlotKeyed)) then {
-        GVAR(txSlotKeyed) = false;
+    if (EGVAR(sys_core,pttKeyDown) && {EGVAR(sys_core,pttAcquisition) == GVAR(txSlotAcquisition)}) then {
         [] call EFUNC(sys_core,handleMultiPttKeyPressUp);
     };
+    GVAR(txSlotAcquisition) = -1;
     [{!EGVAR(sys_core,pttKeyDown)}, {
         [{
             params ["_radioId", "_session"];
@@ -53,7 +53,7 @@ if (_talkgroup < 1) exitWith {false};
 GVAR(txSession) = GVAR(txSession) + 1;
 GVAR(txSlotActive) = _slot;
 GVAR(txSlotRadio) = _radioId;
-GVAR(txSlotKeyed) = false;
+GVAR(txSlotAcquisition) = -1;
 
 if (([_radioId] call FUNC(txTalkgroup)) != _talkgroup) then {
     [_radioId, "setState", [MPU5_TX_TALKGROUP_STATE, _talkgroup]] call EFUNC(sys_data,dataEvent);
@@ -69,7 +69,9 @@ if (([_radioId] call FUNC(txTalkgroup)) != _talkgroup) then {
     [-1] call EFUNC(sys_core,handleMultiPttKeyPress);
     GVAR(txSlotKeying) = false;
     ACRE_ACTIVE_RADIO = _activeRadio;
-    GVAR(txSlotKeyed) = EGVAR(sys_core,pttKeyDown) && {ACRE_BROADCASTING_RADIOID == _radioId};
+    if (EGVAR(sys_core,pttKeyDown) && {ACRE_BROADCASTING_RADIOID == _radioId}) then {
+        GVAR(txSlotAcquisition) = EGVAR(sys_core,pttAcquisition);
+    };
 }, [_radioId, GVAR(txSession)], (GVAR(txSwitchTime) + MPU5_TX_SWITCH_DELAY - diag_tickTime) max 0] call CBA_fnc_waitAndExecute;
 
 true
