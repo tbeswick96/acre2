@@ -18,10 +18,10 @@
 
 params ["_txData", "_rxData"];
 
-private _uksf_mode = _rxData getVariable ["mode", ""];
-if (_uksf_mode != (_txData getVariable ["mode", ""])) exitWith {false};
-if (_uksf_mode == "singleChannelPRR") exitWith {true};
-if (_uksf_mode != "singleChannel") exitWith {false};
+private _mode = _rxData getVariable ["mode", ""];
+if (_mode != (_txData getVariable ["mode", ""])) exitWith {false};
+if (_mode == "singleChannelPRR") exitWith {true};
+if (_mode != "singleChannel") exitWith {false};
 
 private _modulation = _rxData getVariable ["modulation", ""];
 private _rxEncryption = _rxData getVariable ["encryption", 0];
