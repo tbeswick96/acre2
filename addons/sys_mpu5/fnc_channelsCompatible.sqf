@@ -1,7 +1,7 @@
 #include "script_component.hpp"
 /*
  * Author: UKSF
- * Checks if a receiving radio channel can decode a transmitting radio channel. The rules match the ACRE single-channel decoder: modulation must match, encrypted traffic needs the same key and traffic rate, clear FM and NB traffic needs a matching CTCSS tone unless the receiver has none, and clear AM traffic always decodes.
+ * Checks if a receiving radio channel can decode a transmitting radio channel. Matching PRR modes are compatible. For single-channel modes, modulation must match, encrypted traffic needs the same key and traffic rate, clear FM and NB traffic needs a matching CTCSS tone unless the receiver has none, and clear AM traffic always decodes. Frequency matching is handled separately.
  *
  * Arguments:
  * 0: Transmitting channel data <HASH>
@@ -17,6 +17,11 @@
  */
 
 params ["_txData", "_rxData"];
+
+private _uksf_mode = _rxData getVariable ["mode", ""];
+if (_uksf_mode != (_txData getVariable ["mode", ""])) exitWith {false};
+if (_uksf_mode == "singleChannelPRR") exitWith {true};
+if (_uksf_mode != "singleChannel") exitWith {false};
 
 private _modulation = _rxData getVariable ["modulation", ""];
 private _rxEncryption = _rxData getVariable ["encryption", 0];
