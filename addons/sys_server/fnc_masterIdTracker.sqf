@@ -25,37 +25,39 @@ if (diag_tickTime > GVAR(nextSearchTime)) then {
 if (!GVAR(doFullSearch)) then {
     //private _start = diag_tickTime;
     private _shortSearchList = HASH_KEYS(GVAR(masterIdTable))-GVAR(unacknowledgedIds);
+    private _itemsByMainObject = createHashMap;
     {
         private _uniqueId = _x;
         private _mainObject = HASH_GET(GVAR(masterIdTable),_uniqueId) select 0;
         // diag_log text format["main object: %1", _mainObject];
         if (isNil "_mainObject") exitWith { GVAR(doFullSearch) = true; };
-        private _objects = [_mainObject];
-        _objects append ((everyContainer _mainObject) apply {_x select 1});
 
-        private _found = false;
-        {
-            private _object = _x;
-            private _items = [];
-            if (_object isKindOf "Man") then {
-                _items = [_object] call EFUNC(sys_core,getGear);
-            } else {
-                _items = ((getItemCargo _object) select 0) select {(_x select [0, 4]) == "ACRE" || {_x == "ItemRadio"} || {_x == "ItemRadioAcreFlagged"}};
-                {
-                    _items pushBack _x; // Add rack unique ID
-                    private _mountedRadio = [_x] call EFUNC(sys_rack,getMountedRadio);
-                    if (_mountedRadio != "") then {
-                        _items pushBack _mountedRadio; // Add mounted radio unique ID
-                    };
-                } forEach (_object getVariable [QEGVAR(sys_rack,vehicleRacks), []]);
-            };
-
+        private _mainObjectKey = hashValue _mainObject;
+        private _heldItems = _itemsByMainObject get _mainObjectKey;
+        if (isNil "_heldItems") then {
+            _heldItems = [];
+            private _objects = [_mainObject];
+            _objects append ((everyContainer _mainObject) apply {_x select 1});
             {
-                if (_uniqueId == _x) exitWith {_found = true};
-            } forEach _items;
-            if (_found) exitWith {};
-        } forEach _objects;
-        if (!_found) exitWith {GVAR(doFullSearch) = true;};
+                private _object = _x;
+                if (_object isKindOf "Man") then {
+                    _heldItems append ([_object] call EFUNC(sys_core,getGear));
+                } else {
+                    _heldItems append (((getItemCargo _object) select 0) select {(_x select [0, 4]) == "ACRE" || {_x == "ItemRadio"} || {_x == "ItemRadioAcreFlagged"}});
+                    {
+                        _heldItems pushBack _x; // Add rack unique ID
+                        private _mountedRadio = [_x] call EFUNC(sys_rack,getMountedRadio);
+                        if (_mountedRadio != "") then {
+                            _heldItems pushBack _mountedRadio; // Add mounted radio unique ID
+                        };
+                    } forEach (_object getVariable [QEGVAR(sys_rack,vehicleRacks), []]);
+                };
+            } forEach _objects;
+            _heldItems = _heldItems apply {toLower _x};
+            _itemsByMainObject set [_mainObjectKey, _heldItems];
+        };
+
+        if !((toLower _uniqueId) in _heldItems) exitWith {GVAR(doFullSearch) = true;};
     } forEach _shortSearchList;
 };
 
