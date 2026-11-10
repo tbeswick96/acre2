@@ -32,10 +32,12 @@ if (!GVAR(doFullSearch)) then {
         // diag_log text format["main object: %1", _mainObject];
         if (isNil "_mainObject") exitWith { GVAR(doFullSearch) = true; };
 
-        private _mainObjectKey = hashValue _mainObject;
-        private _heldItems = _itemsByMainObject get _mainObjectKey;
-        if (isNil "_heldItems") then {
-            _heldItems = [];
+        private _bucket = _itemsByMainObject getOrDefault [hashValue _mainObject, [[], []], true];
+        private _bucketIndex = (_bucket select 0) find _mainObject;
+        private _heldItems = [];
+        if (_bucketIndex >= 0) then {
+            _heldItems = (_bucket select 1) select _bucketIndex;
+        } else {
             private _objects = [_mainObject];
             _objects append ((everyContainer _mainObject) apply {_x select 1});
             {
@@ -54,7 +56,8 @@ if (!GVAR(doFullSearch)) then {
                 };
             } forEach _objects;
             _heldItems = _heldItems apply {toLower _x};
-            _itemsByMainObject set [_mainObjectKey, _heldItems];
+            (_bucket select 0) pushBack _mainObject;
+            (_bucket select 1) pushBack _heldItems;
         };
 
         if !((toLower _uniqueId) in _heldItems) exitWith {GVAR(doFullSearch) = true;};
