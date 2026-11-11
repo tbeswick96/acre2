@@ -146,7 +146,7 @@ private _result = false;
             if (_speakingType == SPEAKING_TYPE_GOD) then { // God Mode
                 GVAR(godSpeakers) pushBack _speakingId;
             } else { // Direct / Intercom / Spectate / Zeus / Unknown
-                if (_unit call FUNC(inRange)) then {
+                if (GVAR(unconsciousVoice) || {_unit call FUNC(inRange)}) then {
                     GVAR(speakers) pushBack _unit;
                 };
             };
