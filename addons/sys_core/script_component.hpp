@@ -24,6 +24,8 @@
 #define MAX_DIRECT_RANGE 300
 #define NEAR_RADIO_RANGE 150
 
+#define IS_UNCONSCIOUS_VOICE(unit) (GVAR(unconsciousVoice) && {(unit) getVariable [QGVAR(isUnconscious), false]})
+
 #define ZEUS_INTERFACE_DISPLAY 312
 
 #define ROPE_HELPER QGVAR(connectorHelper)

@@ -247,8 +247,9 @@ if (GVAR(keyedMicRadios) isNotEqualTo []) then {
 {
     private _unit = _x;
     if (!isNull _unit) then {
-        if (!IS_MUTED(_unit) && {_unit != acre_player}) then {
-            if (_unit call FUNC(inRange)) then {
+        private _unconsciousSpeaker = IS_UNCONSCIOUS_VOICE(_unit);
+        if (!IS_MUTED(_unit) && {_unit != acre_player} && {!_unconsciousSpeaker || {IS_UNCONSCIOUS_VOICE(acre_player)}}) then {
+            if (_unconsciousSpeaker || {_unit call FUNC(inRange)}) then {
                 TRACE_1("Calling processDirectSpeaker",_unit);
                 private _params = [_unit] call FUNC(processDirectSpeaker);
                 ["updateSpeakingData", _params] call EFUNC(sys_rpc,callRemoteProcedure);

@@ -10,6 +10,16 @@
 
 if (!hasInterface) exitWith {};
 
+["ace_unconscious", {
+    params ["_unit", "_unconscious"];
+    if (local _unit) then { _unit setVariable [QGVAR(isUnconscious), _unconscious, true]; };
+}] call CBA_fnc_addEventHandler;
+
+["CAManBase", "Killed", {
+    params ["_unit"];
+    if (local _unit && {_unit getVariable [QGVAR(isUnconscious), false]}) then { _unit setVariable [QGVAR(isUnconscious), false, true]; };
+}] call CBA_fnc_addClassEventHandler;
+
 // Ensure the TeamSpeak plugin handler code is initialized first
 [] call EFUNC(sys_io,startServer);
 

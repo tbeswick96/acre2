@@ -648,6 +648,12 @@
             <Chinesesimp>Teamspeak频道切换</Chinesesimp>
             <Turkish>TeamSpeak Kanal Değiştirmesi</Turkish>
         </Key>
+        <Key ID="STR_ACRE_sys_core_unconsciousVoice_description">
+            <English>ACE unconscious players' direct speech reaches only other unconscious players, at full volume at any distance. Conscious players do not hear it.</English>
+        </Key>
+        <Key ID="STR_ACRE_sys_core_unconsciousVoice_displayName">
+            <English>Unconscious Players Hear Each Other</English>
+        </Key>
         <Key ID="STR_ACRE_sys_core_unmuteClients_displayName">
             <English>Unmute Clients</English>
             <Czech>Zrušit ztlumení diváků</Czech>

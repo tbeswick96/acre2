@@ -25,7 +25,9 @@ private _isIntercomAttenuate = false;
 private _directVolume = 1;
 private _speakingType = "d";
 
-if (_id in ACRE_SPECTATORS_LIST && {ACRE_IS_SPECTATOR}) then {
+private _bothUnconscious = IS_UNCONSCIOUS_VOICE(_unit) && {IS_UNCONSCIOUS_VOICE(acre_player)};
+
+if (_bothUnconscious || {_id in ACRE_SPECTATORS_LIST && {ACRE_IS_SPECTATOR}}) then {
     _bothSpectating = true;
 } else {
     private _attenuate = [_unit] call EFUNC(sys_attenuate,getUnitAttenuate);
@@ -86,11 +88,11 @@ if (_isIntercomAttenuate) then {
     _underwater = false;
 };
 
-if (GVAR(isDeaf) || {_unit getVariable [QGVAR(isDisabled), false]} || {_underwater}) then {
+if ((_unit getVariable [QGVAR(isDisabled), false]) || {!_bothUnconscious && {GVAR(isDeaf) || _underwater}}) then {
     _directVolume = 0.0;
 };
 
 private _canUnderstand = [_unit] call FUNC(canUnderstand);
-private _params = [_speakingType, _id, !_canUnderstand, (_directVolume * GVAR(globalVolume))^3, _emitterPos, _emitterDir];
+private _params = [_speakingType, _id, !_canUnderstand, [(_directVolume * GVAR(globalVolume))^3, _directVolume] select _bothUnconscious, _emitterPos, _emitterDir];
 TRACE_1("SPEAKING UPDATE",_params);
 _params

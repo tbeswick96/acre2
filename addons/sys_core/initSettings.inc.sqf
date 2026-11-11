@@ -66,6 +66,15 @@
     {["disableUnmuteClients", _this] call FUNC(setPluginSetting)}
 ] call CBA_fnc_addSetting;
 
+[
+    QGVAR(unconsciousVoice),
+    "CHECKBOX",
+    [localize LSTRING(unconsciousVoice_displayName), localize LSTRING(unconsciousVoice_description)],
+    "ACRE2",
+    true,
+    true
+] call CBA_fnc_addSetting;
+
 // Teamspeak Channel Switching
 // Switch channels
 [
