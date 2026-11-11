@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 #include "stdafx.h"
-#include "Mmsystem.h"
+#include <mmsystem.h>
 #include <string>
 
 

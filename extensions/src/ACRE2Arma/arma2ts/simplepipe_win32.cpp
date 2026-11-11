@@ -1,7 +1,7 @@
 #include "simplepipe_win32.hpp"
-#include <Sddl.h>
+#include <sddl.h>
 #include <AccCtrl.h>
-#include <Aclapi.h>
+#include <aclapi.h>
 
 namespace {
 const wchar_t kPipePrefix[] = L"\\\\.\\pipe\\";

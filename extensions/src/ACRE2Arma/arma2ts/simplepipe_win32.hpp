@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <Winsock2.h>
+#include <winsock2.h>
 
 class PipePair {
 public:

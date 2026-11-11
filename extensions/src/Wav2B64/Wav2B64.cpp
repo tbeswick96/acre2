@@ -132,7 +132,7 @@ std::vector<char> base64_decode(std::string const& encoded_string) {
 }
 
 
-int _tmain(int argc, wchar_t* argv[])
+int _tmain(int argc, char* argv[])
 {
     CWave checkFile;
 
