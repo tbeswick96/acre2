@@ -235,10 +235,10 @@
             <English>ACRE Options</English>
             <Czech>ACRE Nastavení</Czech>
             <French>Options ACRE</French>
+            <Spanish>Opciones ACRE</Spanish>
             <Italian>Opzioni ACRE</Italian>
             <German>ACRE-Optionen</German>
             <Japanese>ACRE 設定</Japanese>
-            <Spanish>Opciones ACRE</Spanish>
         </Key>
         <Key ID="STR_ACRE_sys_core_PreviousChannel">
             <English>Previous Channel (Active Radio)</English>
