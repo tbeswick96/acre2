@@ -1,6 +1,10 @@
 # Cross-compile the Windows extensions and TeamSpeak plugin from Linux with clang-cl, lld-link and an xwin splat.
 # Usage: cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=CMakeModules/clang-cl-xwin.cmake -DUSE_64BIT_BUILD=ON|OFF
 # XWIN_ROOT (default /opt/xwin) is the output of `xwin splat`. The LLVM tools must be on PATH.
+if(CMAKE_VERSION VERSION_LESS 3.19)
+    message(FATAL_ERROR "clang-cl-xwin.cmake needs CMake 3.19 or later, found ${CMAKE_VERSION}")
+endif()
+
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_VERSION 10.0)
 set(CMAKE_TRY_COMPILE_CONFIGURATION Release)
@@ -12,6 +16,16 @@ endif()
 if(NOT XWIN_ROOT)
     set(XWIN_ROOT "/opt/xwin")
 endif()
+# The SDK paths go into flag strings that CMake splits on spaces.
+if(XWIN_ROOT MATCHES " ")
+    message(FATAL_ERROR "XWIN_ROOT must not contain spaces: '${XWIN_ROOT}'")
+endif()
+# The *_FLAGS_INIT values below seed the cache only once, so a build directory is bound to one SDK root and architecture.
+set(_xwin_signature "${XWIN_ROOT}|${USE_64BIT_BUILD}")
+if(DEFINED CACHE{ACRE_XWIN_SIGNATURE} AND NOT ACRE_XWIN_SIGNATURE STREQUAL _xwin_signature)
+    message(FATAL_ERROR "This build directory was configured for '${ACRE_XWIN_SIGNATURE}', not '${_xwin_signature}'. Use a clean build directory.")
+endif()
+set(ACRE_XWIN_SIGNATURE "${_xwin_signature}" CACHE INTERNAL "")
 
 if(USE_64BIT_BUILD)
     set(CMAKE_SYSTEM_PROCESSOR AMD64)
