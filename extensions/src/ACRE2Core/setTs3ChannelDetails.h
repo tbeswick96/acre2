@@ -5,7 +5,7 @@
 #include "TextMessage.h"
 #include "Engine.h"
 #include "StringConversions.h"
-#include "String"
+#include <string>
 
 #include <sstream>
 

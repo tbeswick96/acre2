@@ -1,4 +1,4 @@
-#include <SDKDDKVer.h>
+#include <sdkddkver.h>
 #include <stdio.h>
 #include <tchar.h>
 #include "Wave.h"

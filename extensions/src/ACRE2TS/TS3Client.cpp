@@ -17,7 +17,7 @@
 
 #include "AcreSettings.h"
 
-#pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "shlwapi.lib")
 
 #define INVALID_TS3_CHANNEL -1
 #define DEFAULT_TS3_CHANNEL L"ACRE"

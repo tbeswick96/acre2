@@ -1,10 +1,10 @@
 #pragma once
 
 #include <Windows.h>
-#include <SDKDDKVer.h>
+#include <sdkddkver.h>
 #include <stdio.h>
 #include <tchar.h>
-#include "Mmsystem.h"
+#include <mmsystem.h>
 #include <string>
 
 
