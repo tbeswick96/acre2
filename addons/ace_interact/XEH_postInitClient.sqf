@@ -45,3 +45,15 @@ if (!hasInterface) exitWith {};
 // Notification displays
 [IDD_SPEC_DISPLAY] call EFUNC(api,addNotificationDisplay);
 [IDD_ace_arsenal] call EFUNC(api,addNotificationDisplay);
+
+// ACE Arsenal Right Panel Tab
+if ("ace_arsenal" call CBA_fnc_isModLoaded) then {
+    private _radios = "(getNumber(_x >> 'acre_isRadio')) == 1" configClasses (configFile >> "CfgWeapons") apply {configName _x};
+    private _gsaItems = getArray(configFile >> "CfgPatches" >> "acre_sys_gsa" >> "weapons");
+
+    GVAR(arsenalButton) = [
+        _radios + _gsaItems,
+        LLSTRING(radios),
+        "a3\modules_f_curator\data\portraitradio_ca.paa"
+    ] call ace_arsenal_fnc_addRightPanelButton;
+};
