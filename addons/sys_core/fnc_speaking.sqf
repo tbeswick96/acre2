@@ -245,24 +245,9 @@ if (GVAR(keyedMicRadios) isNotEqualTo []) then {
 #endif
 
 {
-    private _unit = _x;
-    if (!isNull _unit) then {
-        private _unconsciousSpeaker = IS_UNCONSCIOUS_VOICE(_unit);
-        if (!IS_MUTED(_unit) && {_unit != acre_player} && {!_unconsciousSpeaker || {IS_UNCONSCIOUS_VOICE(acre_player)}}) then {
-            if (_unconsciousSpeaker || {_unit call FUNC(inRange)}) then {
-                TRACE_1("Calling processDirectSpeaker",_unit);
-                private _params = [_unit] call FUNC(processDirectSpeaker);
-                ["updateSpeakingData", _params] call EFUNC(sys_rpc,callRemoteProcedure);
-            } else {
-                if !(_unit in _sentMicRadios) then {
-                    ["updateSpeakingData", ["m", GET_TS3ID(_unit), 0]] call EFUNC(sys_rpc,callRemoteProcedure);
-                };
-            };
-        } else {
-            if (_unit != acre_player) then {
-                ["updateSpeakingData", ['m', GET_TS3ID(_unit), 0]] call EFUNC(sys_rpc,callRemoteProcedure);
-            };
-        };
+    private _params = [_x, _sentMicRadios] call FUNC(getDirectSpeakingData);
+    if (_params isNotEqualTo []) then {
+        ["updateSpeakingData", _params] call EFUNC(sys_rpc,callRemoteProcedure);
     };
 } forEach GVAR(speakers);
 

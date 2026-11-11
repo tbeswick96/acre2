@@ -11,6 +11,7 @@ PREP(getAllRadios);
 PREP(getClientIdLoop);
 PREP(getCompartment);
 PREP(getDescriptiveName);
+PREP(getDirectSpeakingData);
 PREP(getGear);
 PREP(getHeadVector);
 PREP(getLanguageId);
