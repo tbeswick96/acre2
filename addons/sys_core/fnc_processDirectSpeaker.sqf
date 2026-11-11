@@ -88,7 +88,7 @@ if (_isIntercomAttenuate) then {
     _underwater = false;
 };
 
-if ((_unit getVariable [QGVAR(isDisabled), false]) || {!_bothUnconscious && {GVAR(isDeaf) || _underwater}}) then {
+if (!_bothUnconscious && {GVAR(isDeaf) || {_unit getVariable [QGVAR(isDisabled), false]} || {_underwater}}) then {
     _directVolume = 0.0;
 };
 
