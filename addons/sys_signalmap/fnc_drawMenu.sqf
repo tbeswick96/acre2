@@ -55,8 +55,7 @@ with uiNamespace do {
     GVAR(ctrlGroup) ctrlSetPosition [safeZoneX + safeZoneW - 0.5, safeZoneY + safeZoneH - 1, 0.5, 0.75];
     GVAR(ctrlGroup) ctrlCommit 0;
 
-    private ["_background"];
-    CTRL(_background,"RscBackground");
+    private CTRL(_background,"RscBackground");
 
     //_background ctrlSetBackgroundColor [0.8,0.75,0.35,0.75];
 
@@ -83,8 +82,7 @@ with uiNamespace do {
     GVAR(txAntennaListBox) lbSetCurSel (uiNamespace getVariable [QGVAR(txAntennaListBoxValue), 0]);
     GVAR(txAntennaListBox) ctrlCommit 0;
 
-    private ["_txAntText"];
-    CTRL(_txAntText,"RscText");
+    private CTRL(_txAntText,"RscText");
     _txAntText ctrlSetPosition [0.0, 0, 0.35, 0.045];
     _txAntText ctrlSetText "Tx Antenna: ";
     _txAntText ctrlCommit 0;
@@ -95,8 +93,7 @@ with uiNamespace do {
     GVAR(txHeight) ctrlSetText str (uiNamespace getVariable [QGVAR(txHeightValue), 2]);
     GVAR(txHeight) ctrlCommit 0;
 
-    private ["_txHeightTxt"];
-    CTRL(_txHeightTxt,"RscText");
+    private CTRL(_txHeightTxt,"RscText");
     _txHeightTxt ctrlSetPosition [0.0, 0.055, 0.35, 0.045];
     _txHeightTxt ctrlSetText "Tx Height: ";
     _txHeightTxt ctrlCommit 0;
@@ -107,8 +104,7 @@ with uiNamespace do {
     GVAR(txDir) ctrlSetText str (uiNamespace getVariable [QGVAR(txDirValue), 0]);
     GVAR(txDir) ctrlCommit 0;
 
-    private ["_txDirTxt"];
-    CTRL(_txDirTxt,"RscText");
+    private CTRL(_txDirTxt,"RscText");
     _txDirTxt ctrlSetPosition [0.26, 0.055, 0.35, 0.045];
     _txDirTxt ctrlSetText "Tx Dir: ";
     _txDirTxt ctrlCommit 0;
@@ -133,8 +129,7 @@ with uiNamespace do {
     GVAR(rxAntennaListBox) lbSetCurSel (uiNamespace getVariable [QGVAR(rxAntennaListBoxValue), 0]);
     GVAR(rxAntennaListBox) ctrlCommit 0;
 
-    private ["_rxAntText"];
-    CTRL(_rxAntText,"RscText");
+    private CTRL(_rxAntText,"RscText");
     _rxAntText ctrlSetPosition [0.0, 0.055*2, 0.35, 0.045];
     _rxAntText ctrlSetText "Rx Antenna: ";
     _rxAntText ctrlCommit 0;
@@ -145,8 +140,7 @@ with uiNamespace do {
     GVAR(rxHeight) ctrlSetText str (uiNamespace getVariable [QGVAR(rxHeightValue), 2]);
     GVAR(rxHeight) ctrlCommit 0;
 
-    private ["_rxHeightTxt"];
-    CTRL(_rxHeightTxt,"RscText");
+    private CTRL(_rxHeightTxt,"RscText");
     _rxHeightTxt ctrlSetPosition [0.0, 0.055*3, 0.35, 0.045];
     _rxHeightTxt ctrlSetText "Rx Height: ";
     _rxHeightTxt ctrlCommit 0;
@@ -157,8 +151,7 @@ with uiNamespace do {
     GVAR(sampleSize) ctrlSetText str (uiNamespace getVariable [QGVAR(sampleSizeValue), 50]);
     GVAR(sampleSize) ctrlCommit 0;
 
-    private ["_txSampleSizeTxt"];
-    CTRL(_txSampleSizeTxt,"RscText");
+    private CTRL(_txSampleSizeTxt,"RscText");
     _txSampleSizeTxt ctrlSetPosition [0.26, 0.055*3, 0.35, 0.045];
     _txSampleSizeTxt ctrlSetText "Sample Size: ";
     _txSampleSizeTxt ctrlCommit 0;

@@ -16,7 +16,6 @@
  */
 
 GVAR(testResults) = [];
-private ["_test"];
 
 #define ASSERT_BOOL(val1,val2) (val1 isEqualTo val2)
 #define ASSERT_STRING(val1,val2) (val1 == val2)
@@ -30,7 +29,7 @@ acre_api_fnc_getBaseRadio
 parameters: radioId string
 return: parent class string
 */
-_test = ["ACRE_PRC343_ID_1"] call EFUNC(api,getBaseRadio);
+private _test = ["ACRE_PRC343_ID_1"] call EFUNC(api,getBaseRadio);
 if (ASSERT_STRING(_test,"ACRE_PRC343")) then {
     PASS(acre_api_fnc_getBaseRadio);
 } else {
