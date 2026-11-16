@@ -58,7 +58,7 @@ if (_manualChannelSelection != 1) then {
     private _channel = HASHLIST_SELECT(_channels,_currentChannel);
 
     private _frequencies = HASH_GET(_channel,"frequencies");
-    private _frequency = _frequencies call BIS_fnc_selectRandom;
+    private _frequency = selectRandom _frequencies;
 
     HASH_SET(_channel,"frequencyTX",_frequency);
     HASH_SET(_channel,"frequencyRX",_frequency);

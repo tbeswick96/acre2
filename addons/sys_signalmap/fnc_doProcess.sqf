@@ -78,8 +78,7 @@ with uiNamespace do {
     GVAR(overlayMessageGrp) ctrlCommit 0;
     ctrlSetFocus GVAR(overlayMessageGrp);
 
-    private ["_bg"];
-    CTRLOVERLAY(_bg,"RscBackground");
+    private CTRLOVERLAY(_bg,"RscBackground");
     _bg ctrlSetPosition [0, 0, 0.5, 0.75];
     _bg ctrlCommit 0;
 
