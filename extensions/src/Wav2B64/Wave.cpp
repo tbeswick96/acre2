@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Wave.h"
 #include "math.h"
 #include <fstream>
